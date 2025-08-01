@@ -2,15 +2,19 @@
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
 
-hamburger.addEventListener('click', () => {
-    hamburger.classList.toggle('active');
-    navMenu.classList.toggle('active');
-});
+if (hamburger && navMenu) {
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navMenu.classList.toggle('active');
+    });
+}
 
 // 点击导航链接时关闭移动端菜单
 document.querySelectorAll('.nav-link').forEach(n => n.addEventListener('click', () => {
-    hamburger.classList.remove('active');
-    navMenu.classList.remove('active');
+    if (hamburger && navMenu) {
+        hamburger.classList.remove('active');
+        navMenu.classList.remove('active');
+    }
 }));
 
 // 平滑滚动
@@ -30,141 +34,98 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 // 导航栏滚动效果
 window.addEventListener('scroll', () => {
     const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 100) {
-        navbar.style.background = 'rgba(255, 255, 255, 0.98)';
-        navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
-    } else {
-        navbar.style.background = 'rgba(255, 255, 255, 0.95)';
-        navbar.style.boxShadow = 'none';
+    if (navbar) {
+        if (window.scrollY > 100) {
+            navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+            navbar.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.1)';
+        } else {
+            navbar.style.background = 'rgba(255, 255, 255, 0.95)';
+            navbar.style.boxShadow = 'none';
+        }
     }
 });
 
-// 验证码功能
-let currentCaptcha = '';
-
-// 生成随机验证码
-function generateCaptcha() {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let captcha = '';
-    for (let i = 0; i < 4; i++) {
-        captcha += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return captcha;
-}
-
-// 在Canvas上绘制验证码
-function drawCaptcha(captcha) {
-    const canvas = document.getElementById('captchaCanvas');
-    if (!canvas) return;
+// 视频播放器增强功能
+document.addEventListener('DOMContentLoaded', () => {
+    const videoPlayers = document.querySelectorAll('.video-player');
     
-    const ctx = canvas.getContext('2d');
-    
-    // 清空画布
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    
-    // 设置背景
-    ctx.fillStyle = '#f0f0f0';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    // 绘制验证码文字
-    ctx.font = 'bold 20px Arial';
-    ctx.fillStyle = '#333';
-    ctx.textAlign = 'center';
-    ctx.fillText(captcha, canvas.width/2, canvas.height/2 + 6);
-    
-    // 添加干扰线
-    for (let i = 0; i < 3; i++) {
-        ctx.strokeStyle = `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
-        ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
-        ctx.stroke();
-    }
-    
-    // 添加噪点
-    for (let i = 0; i < 20; i++) {
-        ctx.fillStyle = `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
-        ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 1, 1);
-    }
-}
-
-// 初始化验证码
-function initCaptcha() {
-    currentCaptcha = generateCaptcha();
-    drawCaptcha(currentCaptcha);
-    sessionStorage.setItem('captcha', currentCaptcha);
-}
-
-// 验证用户输入的验证码
-function validateCaptcha(userInput) {
-    const storedCaptcha = sessionStorage.getItem('captcha');
-    return userInput.toUpperCase() === storedCaptcha;
-}
-
-// 表单处理
-const contactForm = document.querySelector('#contactForm');
-if (contactForm) {
-    // 初始化验证码
-    initCaptcha();
-    
-    // 刷新验证码按钮
-    const refreshBtn = document.getElementById('refreshCaptcha');
-    if (refreshBtn) {
-        refreshBtn.addEventListener('click', function() {
-            initCaptcha();
+    videoPlayers.forEach(video => {
+        // 视频加载错误处理
+        video.addEventListener('error', function(e) {
+            console.error('视频加载失败:', e);
+            this.innerHTML = `
+                <div style="
+                    width: 100%; 
+                    height: 100%; 
+                    display: flex; 
+                    align-items: center; 
+                    justify-content: center; 
+                    background: #f0f0f0; 
+                    color: #666; 
+                    border-radius: 8px;
+                    flex-direction: column;
+                ">
+                    <i class="fas fa-exclamation-triangle" style="font-size: 2rem; margin-bottom: 10px;"></i>
+                    <p>视频加载失败</p>
+                    <p style="font-size: 0.8rem; margin-top: 5px;">请检查视频文件是否存在</p>
+                </div>
+            `;
         });
-    }
-    
-    // 验证码图片点击刷新
-    const captchaCanvas = document.getElementById('captchaCanvas');
-    if (captchaCanvas) {
-        captchaCanvas.addEventListener('click', function() {
-            initCaptcha();
+        
+        // 视频加载成功处理
+        video.addEventListener('loadeddata', function() {
+            console.log('视频加载成功');
+            // 禁用所有滤镜
+            this.style.filter = 'none';
         });
-    }
-    
-    contactForm.addEventListener('submit', function(e) {
-        e.preventDefault();
         
-        // 获取表单数据
-        const name = this.querySelector('#name').value;
-        const country = this.querySelector('#country').value;
-        const phone = this.querySelector('#phone').value;
-        const company = this.querySelector('#company').value;
-        const email = this.querySelector('#email').value;
-        const industry = this.querySelector('#industry').value;
-        const address = this.querySelector('#address').value;
-        const content = this.querySelector('#content').value;
-        const captchaInput = this.querySelector('#captcha').value;
+        // 视频播放错误处理
+        video.addEventListener('stalled', function() {
+            console.warn('视频播放停滞');
+        });
         
-        // 表单验证
-        if (!name || !country || !phone || !email || !content || !captchaInput) {
-            alert('请填写所有必填字段');
-            return;
-        }
+        // 检测视频是否只有音频没有画面
+        video.addEventListener('loadedmetadata', function() {
+            console.log('视频元数据加载完成');
+            console.log('视频宽度:', this.videoWidth);
+            console.log('视频高度:', this.videoHeight);
+            console.log('视频时长:', this.duration);
+            
+            // 如果视频尺寸为0，说明可能只有音频
+            if (this.videoWidth === 0 || this.videoHeight === 0) {
+                console.warn('视频可能只有音频轨道，没有视频轨道');
+                this.style.filter = 'none';
+            }
+        });
         
-        // 验证邮箱格式
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            alert('请输入有效的邮箱地址');
-            return;
-        }
+        // 视频播放时禁用滤镜
+        video.addEventListener('play', function() {
+            this.style.filter = 'none';
+            
+            // 强制重新渲染视频
+            this.style.display = 'none';
+            setTimeout(() => {
+                this.style.display = 'block';
+            }, 10);
+        });
         
-        // 验证验证码
-        if (!validateCaptcha(captchaInput)) {
-            alert('验证码错误，请重新输入');
-            this.querySelector('#captcha').value = '';
-            initCaptcha();
-            return;
-        }
+        // 视频暂停时禁用滤镜
+        video.addEventListener('pause', function() {
+            this.style.filter = 'none';
+        });
         
-        // 模拟发送表单数据
-        alert('感谢您的留言！我们会尽快与您联系。');
-        this.reset();
-        initCaptcha();
+        // 视频时间更新时检查
+        video.addEventListener('timeupdate', function() {
+            // 如果视频播放但画面没有变化，尝试强制刷新
+            if (!this.paused && this.currentTime > 0) {
+                // 每5秒检查一次
+                if (Math.floor(this.currentTime) % 5 === 0) {
+                    console.log('视频播放中，当前时间:', this.currentTime);
+                }
+            }
+        });
     });
-}
+});
 
 // 滚动动画
 const observerOptions = {
@@ -182,7 +143,7 @@ const observer = new IntersectionObserver((entries) => {
 
 // 观察所有需要动画的元素
 document.addEventListener('DOMContentLoaded', () => {
-    const animatedElements = document.querySelectorAll('.feature, .product-card, .contact-item');
+    const animatedElements = document.querySelectorAll('.feature, .product-card, .contact-item, .demo-item');
     animatedElements.forEach(el => {
         observer.observe(el);
     });
@@ -358,11 +319,13 @@ document.body.appendChild(backToTop);
 
 // 监听滚动显示/隐藏返回顶部按钮
 window.addEventListener('scroll', () => {
-    if (window.scrollY > 300) {
-        backToTop.style.opacity = '1';
-        backToTop.style.visibility = 'visible';
-    } else {
-        backToTop.style.opacity = '0';
-        backToTop.style.visibility = 'hidden';
+    if (backToTop) {
+        if (window.scrollY > 300) {
+            backToTop.style.opacity = '1';
+            backToTop.style.visibility = 'visible';
+        } else {
+            backToTop.style.opacity = '0';
+            backToTop.style.visibility = 'hidden';
+        }
     }
 }); 

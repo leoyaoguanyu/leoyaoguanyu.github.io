@@ -2690,9 +2690,12 @@ body {
 
 .o1-demo-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
+    grid-template-columns: 1fr; /* 单列布局适合竖版视频 */
+    gap: 3rem; /* 增加间距 */
     margin-bottom: 4rem;
+    max-width: 600px; /* 调整最大宽度适合竖版视频 */
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .demo-item {
@@ -2708,7 +2711,7 @@ body {
 }
 
 .demo-video {
-    padding: 2rem;
+    padding: 1.5rem; /* 减少内边距适合竖版视频 */
 }
 
 .video-placeholder {
@@ -2720,6 +2723,66 @@ body {
     align-items: center;
     justify-content: center;
     margin-bottom: 1rem;
+}
+
+.video-player {
+    width: 100%;
+    height: 500px; /* 调整为竖版高度 */
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    object-fit: contain; /* 改为contain以完整显示视频 */
+    background: #000;
+    transition: all 0.3s ease;
+    display: block;
+    filter: none; /* 禁用所有滤镜 */
+}
+
+.video-player:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* 确保视频播放器在容器中正确显示 */
+.demo-video .video-player {
+    width: 100%;
+    height: 500px; /* 调整为竖版高度 */
+    border-radius: 8px;
+    object-fit: contain; /* 改为contain以完整显示视频 */
+    background: #000;
+    display: block;
+    margin: 0;
+    padding: 0;
+    filter: none; /* 禁用所有滤镜 */
+}
+
+/* 视频容器样式优化 */
+.demo-video {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+}
+
+/* 确保视频海报图片正确显示 */
+.video-player[poster] {
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* 视频播放器控制栏样式 */
+.video-player::-webkit-media-controls {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.video-player::-webkit-media-controls-panel {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* 视频播放器悬停效果 */
+.video-player:hover {
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    filter: none; /* 悬停时也禁用滤镜 */
 }
 
 .logistics-demo {
@@ -2748,20 +2811,14 @@ body {
     transform: scale(1.1);
 }
 
-.demo-label {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 0.8rem;
-    color: #6b7280;
-    margin-bottom: 0.5rem;
-}
+/* 已删除demo-label样式，因为不再需要视频演示标签 */
 
 .demo-title {
     font-size: 1.25rem;
     font-weight: 600;
     color: #1f2937;
     margin-bottom: 0.5rem;
+    margin-top: 1.5rem; /* 增加视频底部与标题的距离 */
 }
 
 .demo-description {
@@ -2844,6 +2901,15 @@ body {
     
     .o1-demo-grid {
         grid-template-columns: 1fr;
+        max-width: 100%;
+    }
+    
+    .video-player {
+        height: 400px; /* 移动端竖版高度 */
+    }
+    
+    .demo-video .video-player {
+        height: 400px; /* 移动端竖版高度 */
     }
     
     .diagram-container {
