@@ -64,7 +64,7 @@
                         <i class="fas fa-map-marker-alt"></i>
                         <div>
                             <h4>地址</h4>
-                            <p>北京市海淀区中关村</p>
+                            <p>北京海淀区东升大厦4楼</p>
                         </div>
                     </div>
                     <div class="contact-item">
@@ -85,25 +85,84 @@
                         <i class="fas fa-clock"></i>
                         <div>
                             <h4>工作时间</h4>
-                            <p>周一至周五 9:00-18:00</p>
+                            <p>周一至周五 9:30-18:00</p>
                         </div>
                     </div>
                 </div>
                 <div class="contact-form">
-                    <form>
-                        <div class="form-group">
-                            <input type="text" placeholder="您的姓名" required>
+                    <form id="contactForm">
+                        <!-- 第一行：姓名、国家/地区、联系方式 -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">姓名*</label>
+                                <input type="text" id="name" name="name" placeholder="请输入您的姓名" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="country">国家/地区*</label>
+                                <input type="text" id="country" name="country" placeholder="所属国家或地区" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">联系方式*</label>
+                                <input type="tel" id="phone" name="phone" placeholder="请输入手机号" required>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <input type="email" placeholder="您的邮箱" required>
+                        
+                        <!-- 第二行：公司/个人、邮箱、应用行业 -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="company">公司</label>
+                                <input type="text" id="company" name="company" placeholder="请输入公司名称">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">邮箱*</label>
+                                <input type="email" id="email" name="email" placeholder="请输入邮箱地址" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="industry">应用行业</label>
+                                <select id="industry" name="industry">
+                                    <option value="">请选择应用行业</option>
+                                    <option value="manufacturing">制造业</option>
+                                    <option value="logistics">物流仓储</option>
+                                    <option value="retail">零售商业</option>
+                                    <option value="healthcare">医疗健康</option>
+                                    <option value="education">教育培训</option>
+                                    <option value="agriculture">农业</option>
+                                    <option value="construction">建筑</option>
+                                    <option value="other">其他</option>
+                                </select>
+                            </div>
                         </div>
+                        
+                        <!-- 第三行：联系地址 -->
                         <div class="form-group">
-                            <input type="tel" placeholder="您的电话">
+                            <label for="address">联系地址</label>
+                            <input type="text" id="address" name="address" placeholder="请输入您的联系地址">
                         </div>
+                        
+                        <!-- 第四行：内容 -->
                         <div class="form-group">
-                            <textarea placeholder="您的留言" rows="5" required></textarea>
+                            <label for="content">内容*</label>
+                            <textarea id="content" name="content" placeholder="所填内容请务必包含产品名称或型号" rows="5" required></textarea>
                         </div>
-                        <button type="submit" class="btn btn-primary">发送消息</button>
+                        
+                        <!-- 第五行：验证码 -->
+                        <div class="form-group captcha-group">
+                            <label for="captcha">验证码*</label>
+                            <div class="captcha-container">
+                                <input type="text" id="captcha" name="captcha" placeholder="请输入验证码" required>
+                                <div class="captcha-image-container">
+                                    <canvas id="captchaCanvas" width="120" height="40"></canvas>
+                                    <button type="button" id="refreshCaptcha" class="refresh-btn">
+                                        <i class="fas fa-sync-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-disclaimer">
+                            <p>通过提交此表单，即表示您同意我们的使用条款和隐私政策。隐私政策阐述了我们将如何收集、使用及披露您的个人信息，包括向第三方披露的情形。</p>
+                        </div>
+                        <button type="submit" class="btn btn-primary">联系销售</button>
                     </form>
                 </div>
             </div>

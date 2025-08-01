@@ -39,28 +39,130 @@ window.addEventListener('scroll', () => {
     }
 });
 
+// 验证码功能
+let currentCaptcha = '';
+
+// 生成随机验证码
+function generateCaptcha() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let captcha = '';
+    for (let i = 0; i < 4; i++) {
+        captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return captcha;
+}
+
+// 在Canvas上绘制验证码
+function drawCaptcha(captcha) {
+    const canvas = document.getElementById('captchaCanvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    // 清空画布
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // 设置背景
+    ctx.fillStyle = '#f0f0f0';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // 绘制验证码文字
+    ctx.font = 'bold 20px Arial';
+    ctx.fillStyle = '#333';
+    ctx.textAlign = 'center';
+    ctx.fillText(captcha, canvas.width/2, canvas.height/2 + 6);
+    
+    // 添加干扰线
+    for (let i = 0; i < 3; i++) {
+        ctx.strokeStyle = `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.stroke();
+    }
+    
+    // 添加噪点
+    for (let i = 0; i < 20; i++) {
+        ctx.fillStyle = `rgb(${Math.random()*255},${Math.random()*255},${Math.random()*255})`;
+        ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 1, 1);
+    }
+}
+
+// 初始化验证码
+function initCaptcha() {
+    currentCaptcha = generateCaptcha();
+    drawCaptcha(currentCaptcha);
+    sessionStorage.setItem('captcha', currentCaptcha);
+}
+
+// 验证用户输入的验证码
+function validateCaptcha(userInput) {
+    const storedCaptcha = sessionStorage.getItem('captcha');
+    return userInput.toUpperCase() === storedCaptcha;
+}
+
 // 表单处理
-const contactForm = document.querySelector('.contact-form form');
+const contactForm = document.querySelector('#contactForm');
 if (contactForm) {
+    // 初始化验证码
+    initCaptcha();
+    
+    // 刷新验证码按钮
+    const refreshBtn = document.getElementById('refreshCaptcha');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function() {
+            initCaptcha();
+        });
+    }
+    
+    // 验证码图片点击刷新
+    const captchaCanvas = document.getElementById('captchaCanvas');
+    if (captchaCanvas) {
+        captchaCanvas.addEventListener('click', function() {
+            initCaptcha();
+        });
+    }
+    
     contactForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
         // 获取表单数据
-        const formData = new FormData(this);
-        const name = this.querySelector('input[type="text"]').value;
-        const email = this.querySelector('input[type="email"]').value;
-        const phone = this.querySelector('input[type="tel"]').value;
-        const message = this.querySelector('textarea').value;
+        const name = this.querySelector('#name').value;
+        const country = this.querySelector('#country').value;
+        const phone = this.querySelector('#phone').value;
+        const company = this.querySelector('#company').value;
+        const email = this.querySelector('#email').value;
+        const industry = this.querySelector('#industry').value;
+        const address = this.querySelector('#address').value;
+        const content = this.querySelector('#content').value;
+        const captchaInput = this.querySelector('#captcha').value;
         
-        // 简单的表单验证
-        if (!name || !email || !message) {
+        // 表单验证
+        if (!name || !country || !phone || !email || !content || !captchaInput) {
             alert('请填写所有必填字段');
+            return;
+        }
+        
+        // 验证邮箱格式
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert('请输入有效的邮箱地址');
+            return;
+        }
+        
+        // 验证验证码
+        if (!validateCaptcha(captchaInput)) {
+            alert('验证码错误，请重新输入');
+            this.querySelector('#captcha').value = '';
+            initCaptcha();
             return;
         }
         
         // 模拟发送表单数据
         alert('感谢您的留言！我们会尽快与您联系。');
         this.reset();
+        initCaptcha();
     });
 }
 
