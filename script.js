@@ -328,4 +328,35 @@ window.addEventListener('scroll', () => {
             backToTop.style.visibility = 'hidden';
         }
     }
+});
+
+// 新闻滚动控制
+document.addEventListener('DOMContentLoaded', () => {
+    const newsScrollTrack = document.querySelector('.news-scroll-track');
+    const newsScrollCards = document.querySelectorAll('.news-scroll-card');
+    
+    if (newsScrollTrack) {
+        // 鼠标悬停时暂停动画
+        newsScrollTrack.addEventListener('mouseenter', () => {
+            newsScrollTrack.style.animationPlayState = 'paused';
+        });
+        
+        // 鼠标离开时恢复动画
+        newsScrollTrack.addEventListener('mouseleave', () => {
+            newsScrollTrack.style.animationPlayState = 'running';
+        });
+        
+        // 为每个卡片添加悬停效果
+        newsScrollCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                // 当鼠标悬停在卡片上时，暂停整个滚动
+                newsScrollTrack.style.animationPlayState = 'paused';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                // 当鼠标离开卡片时，恢复滚动
+                newsScrollTrack.style.animationPlayState = 'running';
+            });
+        });
+    }
 }); 

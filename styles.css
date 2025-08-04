@@ -50,10 +50,9 @@ body {
 }
 
 .logo-image {
-    width: 40px;
-    height: 40px;
+    width: 60px; /* 增大商标尺寸 */
+    height: 60px; /* 增大商标尺寸 */
     object-fit: contain;
-    filter: drop-shadow(0 2px 4px rgba(59, 130, 246, 0.3));
 }
 
 .logo-text {
@@ -115,7 +114,6 @@ body {
 }
 
 .logo-container:hover .logo-image {
-    filter: drop-shadow(0 4px 8px rgba(59, 130, 246, 0.4));
     transform: scale(1.03);
     transition: all 0.3s ease;
 }
@@ -666,8 +664,10 @@ body {
     position: relative;
     overflow: hidden;
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* 改为顶部对齐，然后通过padding-top下移 */
     justify-content: center;
+    min-height: 300px; /* 确保有足够的高度来居中 */
+    padding-top: 120px; /* 增加顶部内边距，让标题下移 */
 }
 
 .page-header .container {
@@ -681,7 +681,7 @@ body {
 }
 
 .page-title {
-    font-size: 3rem;
+    font-size: 2.5rem; /* 调小标题尺寸 */
     font-weight: 800;
     margin-bottom: 20px;
     background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 25%, #c084fc 50%, #ddd6fe 75%, #ffffff 100%);
@@ -691,6 +691,7 @@ body {
     position: relative;
     z-index: 1;
     text-transform: uppercase;
+    text-align: center; /* 确保居中 */
 }
 
 .page-title::after {
@@ -1128,8 +1129,8 @@ body {
     }
 
     .logo-image {
-        width: 36px;
-        height: 36px;
+        width: 50px; /* 移动端也增大商标尺寸 */
+        height: 50px; /* 移动端也增大商标尺寸 */
     }
 
     .company-name {
@@ -1170,7 +1171,7 @@ body {
     }
 
     .page-title {
-        font-size: 2.2rem;
+        font-size: 2rem; /* 移动端进一步调小 */
     }
 
     .page-subtitle {
@@ -1269,7 +1270,7 @@ body {
     }
 
     .page-title {
-        font-size: 1.8rem;
+        font-size: 1.6rem; /* 480px移动端进一步调小 */
     }
 
     .page-subtitle {
@@ -1557,8 +1558,10 @@ body {
     position: relative;
     overflow: hidden;
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* 改为顶部对齐，然后通过padding-top下移 */
     justify-content: center;
+    min-height: 300px; /* 确保有足够的高度来居中 */
+    padding-top: 120px; /* 增加顶部内边距，让标题下移 */
 }
 
 .news-hero::before {
@@ -1580,7 +1583,7 @@ body {
 }
 
 .news-title {
-    font-size: 3rem;
+    font-size: 2.5rem; /* 调小标题尺寸 */
     font-weight: 800;
     margin-bottom: 20px;
     background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 25%, #c084fc 50%, #ddd6fe 75%, #ffffff 100%);
@@ -1590,6 +1593,7 @@ body {
     position: relative;
     z-index: 1;
     text-transform: uppercase;
+    text-align: center; /* 确保居中 */
 }
 
 .news-title::after {
@@ -1909,7 +1913,7 @@ body {
     }
     
     .news-title {
-        font-size: 2.5rem;
+        font-size: 2rem; /* 移动端进一步调小 */
     }
 }
 
@@ -3598,5 +3602,180 @@ body {
     overflow: hidden;
     border-radius: 15px 15px 0 0;
     background: #f8fafc;
+}
+
+/* 新闻动态滚动区域样式 */
+.news-scroll-section {
+    padding: 80px 0;
+    background: #000000;
+    color: white;
+    overflow: hidden;
+}
+
+.news-scroll-header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.news-scroll-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-bottom: 15px;
+    background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 25%, #c084fc 50%, #ddd6fe 75%, #ffffff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.news-scroll-subtitle {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+}
+
+.news-scroll-container {
+    position: relative;
+    overflow: hidden;
+    margin: 0 -20px;
+}
+
+.news-scroll-track {
+    display: flex;
+    animation: scroll-news 30s linear infinite;
+    width: max-content;
+}
+
+.news-scroll-track:hover {
+    animation-play-state: paused;
+}
+
+.news-scroll-card {
+    flex: 0 0 300px;
+    margin: 0 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    padding: 25px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+}
+
+.news-scroll-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(139, 92, 246, 0.5);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(139, 92, 246, 0.2);
+}
+
+.news-scroll-content h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #ffffff;
+    line-height: 1.4;
+}
+
+.news-scroll-content p {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.5;
+    margin-bottom: 15px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.news-scroll-link {
+    color: #8b5cf6;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.news-scroll-link:hover {
+    color: #a855f7;
+    transform: translateX(5px);
+}
+
+.news-scroll-more {
+    text-align: center;
+    margin-top: 40px;
+}
+
+.news-scroll-more-btn {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 12px 25px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.news-scroll-more-btn:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+@keyframes scroll-news {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .news-scroll-title {
+        font-size: 2rem;
+    }
+    
+    .news-scroll-subtitle {
+        font-size: 1rem;
+    }
+    
+    .news-scroll-card {
+        flex: 0 0 250px;
+        margin: 0 10px;
+        padding: 20px;
+    }
+    
+    .news-scroll-content h3 {
+        font-size: 1rem;
+    }
+    
+    .news-scroll-content p {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .news-scroll-title {
+        font-size: 1.8rem;
+    }
+    
+    .news-scroll-card {
+        flex: 0 0 200px;
+        margin: 0 8px;
+        padding: 15px;
+    }
+    
+    .news-scroll-content h3 {
+        font-size: 0.9rem;
+    }
+    
+    .news-scroll-content p {
+        font-size: 0.8rem;
+    }
 }
 
