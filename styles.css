@@ -63,18 +63,13 @@ body {
 }
 
 .company-name {
-    color: #1f2937;
+    color: #8b5cf6;
     font-weight: 800;
     margin: 0;
     font-size: 1.2rem;
     font-family: 'Inter', sans-serif;
     letter-spacing: 0.5px;
     position: relative;
-    background: linear-gradient(135deg, #8b5cf6 0%, #a855f7 50%, #ffffff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: 0 2px 4px rgba(139, 92, 246, 0.1);
 }
 
 .company-name::after {
@@ -102,10 +97,7 @@ body {
 .logo-container:hover .company-name {
     transform: scale(1.01);
     transition: transform 0.3s ease;
-    background: linear-gradient(135deg, #a855f7 0%, #8b5cf6 50%, #7c3aed 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #a855f7;
 }
 
 .logo-container:hover .company-english {
@@ -121,10 +113,11 @@ body {
 .nav-menu {
     display: flex;
     list-style: none;
-    gap: 3rem;
+    gap: 4rem;
     margin: 0;
     padding: 0;
     margin-right: 3rem;
+    justify-content: flex-end;
 }
 
 .nav-link {
@@ -138,7 +131,7 @@ body {
 }
 
 .nav-link:hover {
-    color: #3b82f6;
+    color: #8b5cf6;
 }
 
 .nav-link::after {
@@ -148,7 +141,7 @@ body {
     left: 0;
     width: 0;
     height: 2px;
-    background: #3b82f6;
+    background: #8b5cf6;
     transition: width 0.3s ease;
 }
 
@@ -178,7 +171,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 0;
-    padding: 60px 100px;
+    padding: 40px 100px;
     background: #f8f9fa;
     border: none;
     border-radius: 0;
@@ -188,32 +181,34 @@ body {
     position: fixed;
     top: 45px;
     left: 50%;
-    transform: translateX(-50%) translateY(-10px);
+    transform: translateX(-50%) translateY(10px);
     z-index: 1001;
     width: 100vw;
     max-width: none;
     min-width: auto;
     transition: all 0.3s ease;
+    transition-delay: 0.1s;
 }
   
 
 .nav-item-dropdown:hover .dropdown-menu {
     opacity: 1;
     visibility: visible;
-    transform: translateX(-50%) translateY(20px);
+    transform: translateX(-50%) translateY(30px);
+    transition-delay: 0s;
 }
 
 .dropdown-header {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     width: 100%;
 }
 
 .dropdown-title {
-    font-size: 32px;
+    font-size: 28px;
     font-weight: 800;
     color: #1f2937;
-    margin: 0 0 20px 0;
+    margin: 0 0 15px 0;
     letter-spacing: 1px;
     text-transform: uppercase;
 }
@@ -230,8 +225,8 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 40px;
-    margin-top: 40px;
+    gap: 30px;
+    margin-top: 25px;
     flex-wrap: nowrap;
     width: 100%;
 }
@@ -252,12 +247,12 @@ body {
     text-decoration: none;
     color: inherit;
     transition: all 0.3s ease;
-    padding: 30px 40px;
+    padding: 20px 30px;
     background: white;
     border-radius: 12px;
     border: 1px solid #e5e7eb;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    min-width: 250px;
+    min-width: 220px;
     position: relative;
     overflow: hidden;
 }
@@ -286,12 +281,12 @@ body {
 }
 
 .dropdown-product-image {
-    width: 200px;
-    height: 200px;
+    width: 150px;
+    height: 150px;
     background: #f8fafc;
     border-radius: 12px;
     overflow: hidden;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -313,11 +308,11 @@ body {
 }
 
 .dropdown-product-name {
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: #1f2937;
     text-align: center;
-    margin-top: 15px;
+    margin-top: 10px;
     order: 2;
     letter-spacing: 0.5px;
     position: relative;
@@ -1074,6 +1069,10 @@ body {
 .footer-section p {
     color: #d1d5db;
     margin-bottom: 0.5rem;
+    line-height: 1.6;
+    max-width: 280px;
+    word-wrap: break-word;
+    hyphens: auto;
 }
 
 .footer-section ul {
@@ -1099,6 +1098,16 @@ body {
     padding-top: 2rem;
     border-top: 1px solid #374151;
     color: #9ca3af;
+}
+
+/* 页脚公司介绍文字特殊样式 */
+.footer-section:first-child p {
+    max-width: 250px;
+    line-height: 1.7;
+    text-align: justify;
+    word-break: break-word;
+    hyphens: auto;
+    font-size: 0.95rem;
 }
 
 /* 响应式设计 */
@@ -2455,7 +2464,7 @@ body {
 
 .home-hero-subtitle {
     font-size: 1.5rem;
-    margin-bottom: 0;
+    margin-bottom: 2rem;
     line-height: 1.6;
     opacity: 0.9;
     max-width: 400px;
@@ -2463,6 +2472,43 @@ body {
     color: #e2e8f0;
     letter-spacing: 1px;
     text-shadow: 0 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.home-hero-buttons {
+    margin-top: 2rem;
+}
+
+.home-hero-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: #8b5cf6;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+    border: 2px solid #8b5cf6;
+}
+
+.home-hero-btn:hover {
+    background: #a855f7;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+.home-hero-btn i {
+    font-size: 0.9rem;
+    transition: transform 0.3s ease;
+}
+
+.home-hero-btn:hover i {
+    transform: translateX(3px);
 }
 
 /* 首页响应式设计 */
@@ -2486,6 +2532,11 @@ body {
     .home-hero-subtitle {
         font-size: 1.2rem;
     }
+    
+    .home-hero-btn {
+        padding: 12px 25px;
+        font-size: 1rem;
+    }
 }
 
 @media (max-width: 480px) {
@@ -2495,6 +2546,11 @@ body {
     
     .home-hero-subtitle {
         font-size: 1rem;
+    }
+    
+    .home-hero-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
     }
 }
 
