@@ -2946,14 +2946,7 @@ body {
     background-repeat: no-repeat;
 }
 
-/* 视频播放器控制栏样式 */
-.video-player::-webkit-media-controls {
-    background: rgba(0, 0, 0, 0.8);
-}
 
-.video-player::-webkit-media-controls-panel {
-    background: rgba(0, 0, 0, 0.8);
-}
 
 /* 视频播放器悬停效果 */
 .video-player:hover {
