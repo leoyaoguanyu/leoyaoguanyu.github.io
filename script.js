@@ -101,12 +101,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // 视频播放时禁用滤镜
         video.addEventListener('play', function() {
             this.style.filter = 'none';
-            
-            // 强制重新渲染视频
-            this.style.display = 'none';
-            setTimeout(() => {
-                this.style.display = 'block';
-            }, 10);
         });
         
         // 视频暂停时禁用滤镜
