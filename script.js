@@ -353,4 +353,143 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     }
+});
+
+// 验证码生成和处理
+function generateCaptcha() {
+    const canvas = document.getElementById('captchaCanvas');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    
+    // 清空画布
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // 设置背景色
+    ctx.fillStyle = '#f8fafc';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // 生成随机验证码（4位数字+字母）
+    const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+    let captcha = '';
+    for (let i = 0; i < 4; i++) {
+        captcha += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    
+    // 保存正确答案
+    window.correctCaptcha = captcha;
+    
+    // 设置字体样式
+    ctx.font = '20px Arial';
+    ctx.fillStyle = '#374151';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    // 绘制验证码文字
+    const x = canvas.width / 2;
+    const y = canvas.height / 2;
+    ctx.fillText(captcha, x, y);
+    
+    // 添加干扰线
+    for (let i = 0; i < 3; i++) {
+        ctx.strokeStyle = `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.3)`;
+        ctx.beginPath();
+        ctx.moveTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.lineTo(Math.random() * canvas.width, Math.random() * canvas.height);
+        ctx.stroke();
+    }
+    
+    // 添加干扰点
+    for (let i = 0; i < 20; i++) {
+        ctx.fillStyle = `rgba(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, 0.4)`;
+        ctx.fillRect(Math.random() * canvas.width, Math.random() * canvas.height, 2, 2);
+    }
+}
+
+// 验证码初始化和刷新
+document.addEventListener('DOMContentLoaded', function() {
+    // 生成初始验证码
+    generateCaptcha();
+    
+    // 刷新按钮事件
+    const refreshBtn = document.getElementById('refreshCaptcha');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', function() {
+            generateCaptcha();
+        });
+    }
+    
+    // 点击验证码图片也可以刷新
+    const captchaCanvas = document.getElementById('captchaCanvas');
+    if (captchaCanvas) {
+        captchaCanvas.addEventListener('click', function() {
+            generateCaptcha();
+        });
+    }
+});
+
+// EmailJS表单提交处理
+document.addEventListener('DOMContentLoaded', function() {
+    const contactForm = document.getElementById('contactForm');
+    
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // 验证验证码
+            const captchaInput = document.getElementById('captcha').value;
+            const correctCaptcha = window.correctCaptcha;
+            
+            if (captchaInput !== correctCaptcha) {
+                alert('验证码错误，请重新输入！');
+                return;
+            }
+            
+            // 获取表单数据
+            const formData = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                country: document.getElementById('country').value,
+                company: document.getElementById('company').value,
+                address: document.getElementById('address').value,
+                industry: document.getElementById('industry').value,
+                content: document.getElementById('content').value,
+                captcha: captchaInput,
+                submission_time: new Date().toLocaleString('zh-CN')
+            };
+            
+            // 显示发送中状态
+            const submitBtn = contactForm.querySelector('button[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = '发送中...';
+            submitBtn.disabled = true;
+            
+            // 发送主邮件给公司
+            emailjs.send('service_ia0ta7o', 'template_rqcjv9r', formData)
+                .then(function(response) {
+                    console.log('主邮件发送成功:', response);
+                    
+                    // 发送自动回复给用户
+                    return emailjs.send('service_ia0ta7o', 'template_jdnqt3t', formData);
+                })
+                .then(function(response) {
+                    console.log('自动回复发送成功:', response);
+                    alert('消息发送成功！我们已收到您的咨询，会在1-2个工作日内回复您。');
+                    
+                    // 重置表单
+                    contactForm.reset();
+                    generateCaptcha(); // 重新生成验证码
+                })
+                .catch(function(error) {
+                    console.error('邮件发送失败:', error);
+                    alert('发送失败，请稍后重试或直接联系我们：400-888-8888');
+                })
+                .finally(function() {
+                    // 恢复按钮状态
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                });
+        });
+    }
 }); 
