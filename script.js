@@ -466,12 +466,12 @@ document.addEventListener('DOMContentLoaded', function() {
             submitBtn.disabled = true;
             
             // 发送主邮件给公司
-            emailjs.send('service_ia0ta7o', 'template_rqcjv9r', formData)
+            emailjs.send('service_moqblzm', 'template_dh8532s', formData)
                 .then(function(response) {
                     console.log('主邮件发送成功:', response);
                     
                     // 发送自动回复给用户
-                    return emailjs.send('service_ia0ta7o', 'template_jdnqt3t', formData);
+                    return emailjs.send('service_moqblzm', 'template_5w8r3yi', formData);
                 })
                 .then(function(response) {
                     console.log('自动回复发送成功:', response);
