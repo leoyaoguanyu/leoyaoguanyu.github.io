@@ -16,3 +16,10 @@
 [data-theme="dark"] .theme-toggle .icon-sun{display:block}
 [data-theme="dark"] .theme-toggle .icon-moon{display:none}
 @media(prefers-reduced-motion:no-preference){body,.skip,.filters button,.project,.tags span,.theme-toggle{transition:background-color .35s ease,color .35s ease,border-color .35s ease}.project{transition:background-color .35s ease,border-color .35s ease,box-shadow .2s ease,transform .2s ease}}
+
+/* ---- Scroll reveal (evolution #2: staggered entrance on scroll) ---- */
+/* Hidden state only exists under .js, so no-JS users and reduced-motion
+   users (JS never adds .js for them) always see the full content. */
+@media(prefers-reduced-motion:no-preference){
+.js .reveal{opacity:0;translate:0 28px;transition:opacity .7s ease,translate .7s cubic-bezier(.22,.61,.36,1),box-shadow .2s ease,transform .2s ease;transition-delay:var(--reveal-delay,0ms)}
+.js .reveal.revealed{opacity:1;translate:0 0;transition-delay:0ms}}

@@ -31,3 +31,24 @@ themeToggle.addEventListener('click', () => {
   paintToggle();
 });
 paintToggle();
+
+// Scroll reveal: tagged sections rise and fade in as they enter the viewport,
+// project cards staggered. No-JS and reduced-motion users see everything as-is.
+if ('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+  rootEl.classList.add('js');
+  document.querySelectorAll('.projects').forEach(grid => {
+    [...grid.children].forEach((card, i) =>
+      card.style.setProperty('--reveal-delay', Math.min(i, 3) * 90 + 'ms'));
+  });
+  const targets = document.querySelectorAll('[data-reveal]');
+  targets.forEach(el => el.classList.add('reveal'));
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -48px 0px' });
+  targets.forEach(el => io.observe(el));
+}
