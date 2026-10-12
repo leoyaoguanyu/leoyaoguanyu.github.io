@@ -15,3 +15,19 @@ filters.forEach(button => button.addEventListener('click', () => {
   });
   document.querySelector('#project-count').textContent = `Showing ${count} projects`;
 }));
+
+// Theme: day/night toggle. Remembers the choice; otherwise follows the OS setting.
+const themeToggle = document.getElementById('theme-toggle');
+const rootEl = document.documentElement;
+const isDark = () => rootEl.dataset.theme === 'dark';
+function paintToggle() {
+  const dark = isDark();
+  themeToggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
+  themeToggle.setAttribute('aria-pressed', String(dark));
+}
+themeToggle.addEventListener('click', () => {
+  if (isDark()) { delete rootEl.dataset.theme; } else { rootEl.dataset.theme = 'dark'; }
+  try { localStorage.setItem('leo-theme', isDark() ? 'dark' : 'light'); } catch (e) {}
+  paintToggle();
+});
+paintToggle();
