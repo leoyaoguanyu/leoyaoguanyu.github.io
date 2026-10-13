@@ -17,6 +17,13 @@
 [data-theme="dark"] .theme-toggle .icon-moon{display:none}
 @media(prefers-reduced-motion:no-preference){body,.skip,.filters button,.project,.tags span,.theme-toggle{transition:background-color .35s ease,color .35s ease,border-color .35s ease}.project{transition:background-color .35s ease,border-color .35s ease,box-shadow .2s ease,transform .2s ease}}
 
+/* ---- Copy-email button (evolution #3: one-click email copy in contact) ---- */
+.email-copy{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
+.copy-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid #ffffff66;background:transparent;color:#fff;border-radius:20px;padding:5px 13px;font-size:12px;font-weight:700;cursor:pointer}
+.copy-btn:hover{background:#ffffff22;border-color:#fff}
+.copy-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.copy-btn.copied{background:#fff;color:var(--blue);border-color:#fff}
+
 /* ---- Scroll reveal (evolution #2: staggered entrance on scroll) ---- */
 /* Hidden state only exists under .js, so no-JS users and reduced-motion
    users (JS never adds .js for them) always see the full content. */

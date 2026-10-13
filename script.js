@@ -1,3 +1,41 @@
+// Copy email to clipboard: one click, with a "Copied" confirmation state.
+const copyBtn = document.getElementById('copy-email');
+if (copyBtn) {
+  const copyLabel = copyBtn.querySelector('.copy-label');
+  const originalLabel = copyLabel.textContent;
+  let resetTimer = null;
+  function showCopied(message, pressed) {
+    copyBtn.classList.toggle('copied', pressed);
+    copyBtn.setAttribute('aria-label', message);
+    copyLabel.textContent = pressed ? 'Copied' : originalLabel;
+  }
+  copyBtn.addEventListener('click', async () => {
+    const email = copyBtn.dataset.email;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(email);
+      } else {
+        // Fallback for older browsers without the Clipboard API.
+        const ta = document.createElement('textarea');
+        ta.value = email;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'absolute';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+      showCopied('Email address copied to clipboard', true);
+    } catch (e) {
+      copyBtn.setAttribute('aria-label', 'Copy failed. Select the email address manually.');
+      copyLabel.textContent = 'Failed';
+    }
+    clearTimeout(resetTimer);
+    resetTimer = setTimeout(() => showCopied('Copy email address', false), 2000);
+  });
+}
+
 // Filter the real project collection without changing the page location.
 const filters = document.querySelectorAll('[data-filter]');
 const projects = document.querySelectorAll('[data-category]');
