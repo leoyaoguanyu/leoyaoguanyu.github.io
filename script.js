@@ -90,3 +90,18 @@ if ('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-
   }, { threshold: 0.12, rootMargin: '0px 0px -48px 0px' });
   targets.forEach(el => io.observe(el));
 }
+
+// Cursor spotlight: a soft glow follows the pointer over each project's
+// visual banner. Skipped on touch devices and for reduced-motion users.
+const canSpotlight =
+  matchMedia('(hover: hover) and (pointer: fine)').matches &&
+  matchMedia('(prefers-reduced-motion: no-preference)').matches;
+if (canSpotlight) {
+  document.querySelectorAll('.project-visual').forEach(visual => {
+    visual.addEventListener('pointermove', event => {
+      const rect = visual.getBoundingClientRect();
+      visual.style.setProperty('--mx', (event.clientX - rect.left) + 'px');
+      visual.style.setProperty('--my', (event.clientY - rect.top) + 'px');
+    });
+  });
+}

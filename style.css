@@ -30,3 +30,10 @@
 @media(prefers-reduced-motion:no-preference){
 .js .reveal{opacity:0;translate:0 28px;transition:opacity .7s ease,translate .7s cubic-bezier(.22,.61,.36,1),box-shadow .2s ease,transform .2s ease;transition-delay:var(--reveal-delay,0ms)}
 .js .reveal.revealed{opacity:1;translate:0 0;transition-delay:0ms}}
+
+/* ---- Project cursor spotlight (evolution #4: soft glow follows the pointer on project visuals) ----
+   --mx/--my are set by script.js. The glow only appears for hover-capable
+   pointers with no reduced-motion preference; everyone else sees the original visuals. */
+.project-visual{position:relative;overflow:hidden}
+.project-visual::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.22),transparent 70%);transition:opacity .25s ease}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){.project-visual:hover::after{opacity:1}}
