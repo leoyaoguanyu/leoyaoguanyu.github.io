@@ -105,3 +105,53 @@ if (canSpotlight) {
     });
   });
 }
+
+// Scroll progress bar: a razor-thin bar at the top edge fills as the page is
+// read. Transform-only updates coalesced through rAF; no transitions, so it
+// stays accurate and animation-free for reduced-motion users.
+const progressBar = document.querySelector('.scroll-progress');
+if (progressBar) {
+  let progressScheduled = false;
+  function paintProgress() {
+    progressScheduled = false;
+    const max = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+    progressBar.style.transform = 'scaleX(' + progress.toFixed(4) + ')';
+  }
+  function scheduleProgress() {
+    if (!progressScheduled) {
+      progressScheduled = true;
+      requestAnimationFrame(paintProgress);
+    }
+  }
+  window.addEventListener('scroll', scheduleProgress, { passive: true });
+  window.addEventListener('resize', scheduleProgress);
+  paintProgress();
+}
+
+// Scrollspy: highlight the nav link whose section is currently in view.
+// A link is active only when its section crosses the viewport middle; when
+// nothing matches (e.g. at the very top), no link is highlighted.
+const navLinks = [...document.querySelectorAll('header nav a[href^="#"]')];
+const sectionLinks = navLinks
+  .map(link => ({ link, section: document.querySelector(link.getAttribute('href')) }))
+  .filter(({ section }) => section !== null);
+if ('IntersectionObserver' in window && sectionLinks.length > 0) {
+  function setActive(current) {
+    sectionLinks.forEach(({ link }) => {
+      const active = link === current;
+      link.classList.toggle('active', active);
+      if (active) { link.setAttribute('aria-current', 'true'); }
+      else { link.removeAttribute('aria-current'); }
+    });
+  }
+  const spy = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const match = sectionLinks.find(({ section }) => section === entry.target);
+        if (match) setActive(match.link);
+      }
+    });
+  }, { rootMargin: '-45% 0px -50% 0px' });
+  sectionLinks.forEach(({ section }) => spy.observe(section));
+}

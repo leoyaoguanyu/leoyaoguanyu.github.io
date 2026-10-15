@@ -37,3 +37,11 @@
 .project-visual{position:relative;overflow:hidden}
 .project-visual::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.22),transparent 70%);transition:opacity .25s ease}
 @media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){.project-visual:hover::after{opacity:1}}
+
+/* ---- Scroll progress bar + scrollspy nav (evolution #5: scroll-aware navigation) ----
+   A razor-thin bar at the very top tracks reading progress. Nav links for
+   Work / About / Connect get an active state via IntersectionObserver.
+   The bar updates are transform-only (no transitions), so reduced-motion
+   users get an accurate indicator with zero animation. */
+.scroll-progress{position:fixed;top:0;left:0;height:3px;width:100%;background:var(--blue);transform:scaleX(0);transform-origin:0 50%;z-index:100;pointer-events:none}
+nav a.active{color:var(--blue);text-decoration:underline;text-underline-offset:5px}
