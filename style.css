@@ -45,3 +45,17 @@
    users get an accurate indicator with zero animation. */
 .scroll-progress{position:fixed;top:0;left:0;height:3px;width:100%;background:var(--blue);transform:scaleX(0);transform-origin:0 50%;z-index:100;pointer-events:none}
 nav a.active{color:var(--blue);text-decoration:underline;text-underline-offset:5px}
+
+/* ---- Skills marquee ticker (evolution #6: infinite skills strip between
+   hero and work) ---- Two identical groups scroll as one seamless loop;
+   the duplicate is aria-hidden so screen readers hear the list once.
+   The animation stops entirely for reduced-motion users, and pauses on
+   hover for desktop readers. */
+.ticker{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:18px 0}
+.ticker-track{display:flex;width:max-content;animation:ticker-scroll 38s linear infinite}
+.ticker-group{display:flex;align-items:center;gap:36px;padding-right:36px;white-space:nowrap;font-size:15px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--muted)}
+.ticker-group .diamond{color:var(--blue);font-size:11px;letter-spacing:0}
+@keyframes ticker-scroll{to{transform:translateX(-50%)}}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){.ticker:hover .ticker-track{animation-play-state:paused}}
+@media(prefers-reduced-motion:reduce){.ticker-track{animation:none}}
+@media(max-width:580px){.ticker-group{gap:24px;padding-right:24px;font-size:13px}}
