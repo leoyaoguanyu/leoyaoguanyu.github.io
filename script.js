@@ -155,3 +155,26 @@ if ('IntersectionObserver' in window && sectionLinks.length > 0) {
   }, { rootMargin: '-45% 0px -50% 0px' });
   sectionLinks.forEach(({ section }) => spy.observe(section));
 }
+
+// Live local time in the hero availability badge (Hamilton, ON). Static
+// "Hamilton, ON" text stays for no-JS users; the clock only appends itself
+// when the Intl API is available. Screen readers are not spammed: no
+// aria-live, the time is plain text updated every 30 seconds.
+const localTimeEl = document.getElementById('local-time');
+if (localTimeEl && typeof Intl !== 'undefined' && typeof Intl.DateTimeFormat === 'function') {
+  let timeFmt = null;
+  try {
+    timeFmt = new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric', minute: '2-digit', timeZone: 'America/Toronto', timeZoneName: 'short'
+    });
+  } catch (e) { timeFmt = null; }
+  if (timeFmt) {
+    const tick = () => {
+      const now = new Date();
+      localTimeEl.textContent = ' · ' + timeFmt.format(now);
+      localTimeEl.setAttribute('datetime', now.toISOString());
+    };
+    tick();
+    setInterval(tick, 30000);
+  }
+}
