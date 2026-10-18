@@ -161,6 +161,25 @@ if ('IntersectionObserver' in window && sectionLinks.length > 0) {
 // when the Intl API is available. Screen readers are not spammed: no
 // aria-live, the time is plain text updated every 30 seconds.
 const localTimeEl = document.getElementById('local-time');
+// Magnetic CTA buttons: drift a fraction of the pointer offset toward the
+// cursor while hovered, then spring back on leave. Desktop hover-capable
+// pointers only; reduced-motion, touch and no-JS users get static buttons.
+const canMagnet =
+  matchMedia('(hover: hover) and (pointer: fine)').matches &&
+  matchMedia('(prefers-reduced-motion: no-preference)').matches;
+if (canMagnet) {
+  document.querySelectorAll('.primary, .secondary').forEach(btn => {
+    btn.addEventListener('pointermove', event => {
+      const rect = btn.getBoundingClientRect();
+      const dx = event.clientX - (rect.left + rect.width / 2);
+      const dy = event.clientY - (rect.top + rect.height / 2);
+      btn.style.transform =
+        'translate(' + (dx * 0.3).toFixed(1) + 'px,' + (dy * 0.3).toFixed(1) + 'px)';
+    });
+    btn.addEventListener('pointerleave', () => { btn.style.transform = ''; });
+  });
+}
+
 if (localTimeEl && typeof Intl !== 'undefined' && typeof Intl.DateTimeFormat === 'function') {
   let timeFmt = null;
   try {
