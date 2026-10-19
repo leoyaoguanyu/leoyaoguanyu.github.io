@@ -76,3 +76,53 @@ nav a.active{color:var(--blue);text-decoration:underline;text-underline-offset:5
 @media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
 .primary,.secondary{transition:transform .35s cubic-bezier(.22,.61,.36,1),background-color .2s ease}
 }
+
+/* ---- Print stylesheet (evolution #9: recruiter-friendly paper output) ----
+   Recruiters still print candidate pages. Print flattens the theme to
+   black-on-white, hides interactive chrome (nav, progress bar, buttons,
+   ticker, copy/email-copy widget), shows link destinations on paper,
+   expands <details> content, and forces light colors even when the
+   reader uses the dark theme. Pure static CSS; screen look untouched. */
+@media print{
+/* Ink-friendly palette wins over the dark theme on paper */
+[data-theme="dark"]{--bg:#fff;--ink:#111;--muted:#444;--blue:#111;--line:#bbb}
+@page{margin:1.8cm 1.5cm}
+html{scroll-behavior:auto}
+body{font-size:11pt;line-height:1.5;background:#fff;color:#111}
+*{box-shadow:none!important;text-shadow:none!important}
+/* Scroll-reveal elements must be visible even if never scrolled into view */
+.js .reveal{opacity:1;translate:none}
+/* Hide interactive chrome: nav, progress bar, hero index, ticker,
+   CTAs that duplicate content, and the copy-email widget */
+nav,.scroll-progress,.hero-index,.ticker,.hero-actions,.copy-btn,
+.availability .status-dot{display:none!important}
+header{padding:0 0 10px;border-bottom:2px solid #111}
+.hero{padding:24px 0}
+.hero h1{font-size:32pt}
+.hero-bottom{display:block}
+.availability{border-left:2px solid #111;margin-top:16px;padding-left:16px}
+.work,.about{padding:24px 0}
+.projects{display:block}
+.project{break-inside:avoid;margin-bottom:16px;border:1px solid #111}
+.project:hover{transform:none}
+.project-visual{height:auto;min-height:0;background:#fff!important;color:#111;border-bottom:1px solid #111}
+.type-art{font-size:26pt}
+.metric{font-size:40pt}
+/* Expand collapsed project details on paper; hide the toggle */
+details:not([open]) > :not(summary){display:block}
+details > summary{display:none}
+.contact{background:none;color:#111;border:1px solid #111;border-radius:0;margin:0}
+.contact h2{font-size:28pt}
+.contact h2 span,.contact-bottom p,.light{color:#111}
+.light{background:none}
+.contact-links{border-top-color:#bbb}
+/* Paper has no clicks: show destinations for external/mail links */
+main a[href^="http"]::after{content:" (" attr(href) ")";font-size:80%;word-break:break-all}
+main a[href^="mailto:"]::after{content:" (yaoguanyuleo@gmail.com)";font-size:80%}
+a[href^="#"]::after{content:""}
+h2,h3,h4{break-after:avoid}
+p{orphans:3;widows:3}
+thead{display:table-header-group}
+tr{break-inside:avoid}
+footer a[href^="#"]{display:none}
+}
