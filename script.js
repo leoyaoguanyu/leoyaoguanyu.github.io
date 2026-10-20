@@ -197,3 +197,41 @@ if (localTimeEl && typeof Intl !== 'undefined' && typeof Intl.DateTimeFormat ===
     setInterval(tick, 30000);
   }
 }
+
+// Section deep-links: each section heading carries a link button that copies
+// a shareable URL (…/#work). Without JS it degrades to a plain anchor jump.
+// Same clipboard strategy as the email copy button; feedback is an instant
+// icon swap plus an aria-label update, so reduced-motion users get no animation.
+document.querySelectorAll('.heading-anchor').forEach(anchor => {
+  anchor.addEventListener('click', async event => {
+    event.preventDefault();
+    const url = window.location.origin + window.location.pathname +
+      anchor.getAttribute('href');
+    let ok = true;
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        // Fallback for older browsers without the Clipboard API.
+        const ta = document.createElement('textarea');
+        ta.value = url;
+        ta.setAttribute('readonly', '');
+        ta.style.position = 'absolute';
+        ta.style.left = '-9999px';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+      }
+    } catch (e) { ok = false; }
+    anchor.classList.toggle('copied', ok);
+    anchor.setAttribute('aria-label', ok
+      ? 'Link copied to clipboard'
+      : 'Copy failed. Copy the URL from the address bar instead.');
+    clearTimeout(anchor._reset);
+    anchor._reset = setTimeout(() => {
+      anchor.classList.remove('copied');
+      anchor.setAttribute('aria-label', anchor.getAttribute('data-label'));
+    }, 2000);
+  });
+});

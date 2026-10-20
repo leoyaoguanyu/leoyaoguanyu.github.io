@@ -23,6 +23,21 @@
 .copy-btn:hover{background:#ffffff22;border-color:#fff}
 .copy-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .copy-btn.copied{background:#fff;color:var(--blue);border-color:#fff}
+/* Section deep-links: a small chain-link button next to each section heading
+   copies a shareable URL (…/#work). Hidden until the heading is hovered or
+   the button is keyboard-focused; always visible on touch devices. No-JS
+   users get a plain anchor jump. Icon swap feedback is instant (motion-free). */
+.anchor-heading .heading-anchor{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;margin-left:6px;vertical-align:middle;border-radius:8px;color:var(--muted);opacity:0}
+.anchor-heading:hover .heading-anchor,.heading-anchor:focus-visible{opacity:1}
+.heading-anchor:hover{color:var(--blue);text-decoration:none}
+.heading-anchor svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.heading-anchor .icon-check{display:none}
+.heading-anchor.copied{opacity:1;color:var(--blue)}
+.heading-anchor.copied .icon-link{display:none}
+.heading-anchor.copied .icon-check{display:block}
+.contact .heading-anchor{color:#ffffffa6}
+.contact .heading-anchor:hover,.contact .heading-anchor.copied{color:#fff}
+@media (hover:none){.heading-anchor{opacity:1}}
 
 /* ---- Scroll reveal (evolution #2: staggered entrance on scroll) ---- */
 /* Hidden state only exists under .js, so no-JS users and reduced-motion
@@ -94,7 +109,7 @@ body{font-size:11pt;line-height:1.5;background:#fff;color:#111}
 .js .reveal{opacity:1;translate:none}
 /* Hide interactive chrome: nav, progress bar, hero index, ticker,
    CTAs that duplicate content, and the copy-email widget */
-nav,.scroll-progress,.hero-index,.ticker,.hero-actions,.copy-btn,
+nav,.scroll-progress,.hero-index,.ticker,.hero-actions,.copy-btn,.heading-anchor,
 .availability .status-dot{display:none!important}
 header{padding:0 0 10px;border-bottom:2px solid #111}
 .hero{padding:24px 0}
