@@ -141,3 +141,21 @@ thead{display:table-header-group}
 tr{break-inside:avoid}
 footer a[href^="#"]{display:none}
 }
+
+/* ---- Back-to-top progress ring (evolution #11: scroll-aware return button) ----
+   A floating circular button fades in once the page is scrolled: its ring
+   fills with reading progress (same rAF update as the top progress bar) and
+   a click returns to the top. It is a plain anchor, so no-JS users still get
+   the jump; keyboard-focusable and labelled for screen readers. Dark theme
+   adapts via CSS variables; hidden on paper. */
+.back-top{position:fixed;right:22px;bottom:22px;width:46px;height:46px;border-radius:50%;background:var(--bg);color:var(--ink);box-shadow:0 4px 16px rgba(23,25,35,.16);z-index:100;opacity:0;visibility:hidden;translate:0 12px}
+.back-top:hover{text-decoration:none}
+.back-top svg{width:100%;height:100%;display:block;transform:rotate(-90deg)}
+.back-top .ring-bg{fill:none;stroke:var(--line);stroke-width:3}
+.back-top .ring-fg{fill:none;stroke:var(--blue);stroke-width:3;stroke-linecap:round}
+@media(prefers-reduced-motion:no-preference){
+.back-top{transition:opacity .25s ease,translate .25s ease,visibility 0s linear .25s}
+.back-top.visible{opacity:1;visibility:visible;translate:0 0;transition:opacity .25s ease,translate .25s ease}}
+@media(prefers-reduced-motion:reduce){
+.back-top.visible{opacity:1;visibility:visible;translate:0 0}}
+@media print{.back-top{display:none!important}}

@@ -110,6 +110,18 @@ if (canSpotlight) {
 // read. Transform-only updates coalesced through rAF; no transitions, so it
 // stays accurate and animation-free for reduced-motion users.
 const progressBar = document.querySelector('.scroll-progress');
+// Back-to-top progress ring: fills with the same reading progress; the
+// button appears once the page is scrolled. Click returns to the top,
+// smooth unless the user prefers reduced motion. Without JS the plain
+// anchor jump (#main) remains as the fallback.
+const backTop = document.getElementById('back-top');
+const ringFg = backTop ? backTop.querySelector('.ring-fg') : null;
+let ringLen = 0;
+if (ringFg) {
+  ringLen = 2 * Math.PI * 19;
+  ringFg.style.strokeDasharray = ringLen;
+  ringFg.style.strokeDashoffset = ringLen;
+}
 if (progressBar) {
   let progressScheduled = false;
   function paintProgress() {
@@ -117,6 +129,8 @@ if (progressBar) {
     const max = document.documentElement.scrollHeight - window.innerHeight;
     const progress = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
     progressBar.style.transform = 'scaleX(' + progress.toFixed(4) + ')';
+    if (ringFg) ringFg.style.strokeDashoffset = (ringLen * (1 - progress)).toFixed(2);
+    if (backTop) backTop.classList.toggle('visible', window.scrollY > 600);
   }
   function scheduleProgress() {
     if (!progressScheduled) {
@@ -127,6 +141,13 @@ if (progressBar) {
   window.addEventListener('scroll', scheduleProgress, { passive: true });
   window.addEventListener('resize', scheduleProgress);
   paintProgress();
+}
+if (backTop) {
+  backTop.addEventListener('click', event => {
+    event.preventDefault();
+    const smooth = matchMedia('(prefers-reduced-motion: no-preference)').matches;
+    window.scrollTo({ top: 0, behavior: smooth ? 'smooth' : 'auto' });
+  });
 }
 
 // Scrollspy: highlight the nav link whose section is currently in view.
