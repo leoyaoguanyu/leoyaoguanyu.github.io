@@ -256,3 +256,52 @@ document.querySelectorAll('.heading-anchor').forEach(anchor => {
     }, 2000);
   });
 });
+
+// Typewriter in the hero intro: cycles through what Leo builds
+// ("web applications", "data pipelines", "ML models", "REST APIs").
+// Without JS or with reduced motion the first phrase stays as plain
+// static text; the animated word is aria-hidden, so screen readers
+// hear the full static list in the visually-hidden span instead.
+// Timers pause while the tab is hidden.
+const typedWord = document.getElementById('typed-word');
+if (typedWord && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+  const phrases = ['web applications', 'data pipelines', 'ML models', 'REST APIs'];
+  let phrase = 0, pos = phrases[0].length, mode = 'hold', timer = null;
+  function later(ms, fn) {
+    clearTimeout(timer);
+    timer = setTimeout(fn, ms);
+  }
+  function tick() {
+    const current = phrases[phrase];
+    if (mode === 'hold') {
+      mode = 'deleting';
+      later(1600, tick);
+      return;
+    }
+    if (mode === 'deleting') {
+      pos -= 1;
+      typedWord.textContent = current.slice(0, Math.max(0, pos));
+      if (pos <= 0) {
+        phrase = (phrase + 1) % phrases.length;
+        mode = 'typing';
+        later(450, tick);
+      } else {
+        later(28, tick);
+      }
+      return;
+    }
+    pos += 1;
+    typedWord.textContent = current.slice(0, pos);
+    if (pos >= current.length) {
+      mode = 'hold';
+      later(1600, tick);
+    } else {
+      later(60, tick);
+    }
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { clearTimeout(timer); timer = null; }
+    else if (timer === null) { later(400, tick); }
+  });
+  tick();
+}
