@@ -164,3 +164,11 @@ footer a[href^="#"]{display:none}
 @media(prefers-reduced-motion:reduce){
 .back-top.visible{opacity:1;visibility:visible;translate:0 0}}
 @media print{.back-top{display:none!important}}
+
+/* ---- Colophon footer line (evolution #13: craft credit in the footer) ----
+   A one-line colophon next to the copyright: the site is hand-coded with
+   plain HTML/CSS/vanilla JS, no frameworks and no build step. Recruiters
+   read footers; a colophon is the IndieWeb staple for exactly this.
+   Pure text, so no JS is involved; it inherits the footer's muted style
+   and prints like the rest of the footer. */
+.colophon{font-style:italic}
