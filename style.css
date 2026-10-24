@@ -172,3 +172,26 @@ footer a[href^="#"]{display:none}
    Pure text, so no JS is involved; it inherits the footer's muted style
    and prints like the rest of the footer. */
 .colophon{font-style:italic}
+
+/* ---- Animated link feedback (evolution #14: sliding nav underlines + repo arrows) ----
+   Minimal portfolios let links respond on hover instead of flashing an
+   instant underline: nav links grow a 2px brand-blue line from the left
+   (the active section keeps it filled), and "View repository" links nudge
+   an arrow right on hover. Pure CSS, no JS; hover gates keep touch and
+   reduced-motion users on the plain static links, and the print sheet
+   (which already appends repo URLs) is untouched. */
+header nav a:not(.nav-github){position:relative}
+header nav a:not(.nav-github):hover,header nav a:not(.nav-github).active{text-decoration:none}
+header nav a:not(.nav-github)::after{content:"";position:absolute;left:0;bottom:-5px;height:2px;width:100%;background:var(--blue);transform:scaleX(0);transform-origin:0 50%}
+header nav a:not(.nav-github).active{color:var(--blue)}
+header nav a:not(.nav-github).active::after{transform:scaleX(1)}
+.repo::after{content:" \2192";display:inline-block}
+@media(hover:hover){
+header nav a:not(.nav-github):hover::after{transform:scaleX(1)}
+}
+header nav a:not(.nav-github):focus-visible::after{transform:scaleX(1)}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){
+header nav a:not(.nav-github)::after{transition:transform .25s ease}
+.repo::after{transition:transform .25s ease}
+.repo:hover::after{transform:translateX(3px)}
+}
