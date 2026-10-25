@@ -122,6 +122,10 @@ if (ringFg) {
   ringFg.style.strokeDasharray = ringLen;
   ringFg.style.strokeDashoffset = ringLen;
 }
+// Sticky header shadow (evolution #15): the header itself is sticky via
+// CSS; this reuses the existing rAF progress update to add a soft shadow
+// once the page has scrolled, with no extra scroll listener.
+const siteHeader = document.querySelector('header');
 if (progressBar) {
   let progressScheduled = false;
   function paintProgress() {
@@ -131,6 +135,7 @@ if (progressBar) {
     progressBar.style.transform = 'scaleX(' + progress.toFixed(4) + ')';
     if (ringFg) ringFg.style.strokeDashoffset = (ringLen * (1 - progress)).toFixed(2);
     if (backTop) backTop.classList.toggle('visible', window.scrollY > 600);
+    if (siteHeader) siteHeader.classList.toggle('scrolled', window.scrollY > 8);
   }
   function scheduleProgress() {
     if (!progressScheduled) {

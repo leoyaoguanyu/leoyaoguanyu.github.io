@@ -195,3 +195,24 @@ header nav a:not(.nav-github)::after{transition:transform .25s ease}
 .repo::after{transition:transform .25s ease}
 .repo:hover::after{transform:translateX(3px)}
 }
+
+/* ---- Sticky header (evolution #15: navigation stays within reach) ----
+   The header sticks to the top once scrolled past, so Work / About /
+   Connect, the theme toggle and GitHub stay one click away on a long
+   page — the single-page portfolio standard. position:sticky keeps the
+   header in flow (no layout shift, unlike fixed), its own background
+   colour hides scrolled content underneath, and a soft shadow appears
+   only after scrolling (toggled by the existing rAF progress update in
+   script.js). No height change, no transition: reduced-motion users get
+   the same sticky header with zero animation, and no-JS users still get
+   the sticky behaviour (just without the shadow). scroll-padding-top
+   is raised so anchored sections land below the stuck header, and the
+   skip link is lifted above it for keyboard users. Dark theme adapts
+   via CSS variables; on paper the header is static again. */
+header{position:sticky;top:0;z-index:90;background:var(--bg)}
+html{scroll-padding-top:112px}
+.skip{z-index:200}
+header.scrolled{box-shadow:0 4px 16px rgba(23,25,35,.10)}
+[data-theme="dark"] header.scrolled{box-shadow:0 4px 20px rgba(0,0,0,.55)}
+@media(max-width:580px){html{scroll-padding-top:124px}}
+@media print{header{position:static;box-shadow:none!important}}
