@@ -310,3 +310,42 @@ if (typedWord && matchMedia('(prefers-reduced-motion: no-preference)').matches) 
   });
   tick();
 }
+
+// Animated metric counter: the sentiment card's headline F1 (0.7817, the
+// value reported in that project's README) counts up from 0 once the
+// number scrolls into view, using rAF with an ease-out curve so it lands
+// exactly on the reported value. It runs a single time; no-JS and
+// prefers-reduced-motion users keep the static final value from the HTML,
+// and a beforeprint hook forces the final value so paper never shows 0.
+const metricValue = document.querySelector('[data-count-to]');
+if (metricValue) {
+  const countTarget = parseFloat(metricValue.dataset.countTo);
+  const countDecimals = parseInt(metricValue.dataset.countDecimals || '0', 10);
+  let countFinished = false;
+  const finishCount = () => {
+    countFinished = true;
+    metricValue.textContent = countTarget.toFixed(countDecimals);
+  };
+  window.addEventListener('beforeprint', finishCount);
+  if ('IntersectionObserver' in window &&
+      matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+    const counterIo = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (!entry.isIntersecting || countFinished) return;
+        counterIo.disconnect();
+        const duration = 1200;
+        const start = performance.now();
+        const step = now => {
+          if (countFinished) return;
+          const progress = Math.min(1, (now - start) / duration);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          metricValue.textContent = (countTarget * eased).toFixed(countDecimals);
+          if (progress < 1) { requestAnimationFrame(step); }
+          else { finishCount(); }
+        };
+        requestAnimationFrame(step);
+      });
+    }, { threshold: 0.5 });
+    counterIo.observe(metricValue);
+  }
+}

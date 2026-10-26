@@ -216,3 +216,12 @@ header.scrolled{box-shadow:0 4px 16px rgba(23,25,35,.10)}
 [data-theme="dark"] header.scrolled{box-shadow:0 4px 20px rgba(0,0,0,.55)}
 @media(max-width:580px){html{scroll-padding-top:124px}}
 @media print{header{position:static;box-shadow:none!important}}
+
+/* ---- Animated metric counter (evolution #16: F1 counts up on scroll) ----
+   The sentiment card's headline number is now a <span class="metric-value">
+   carrying its target in data-count-to. It must keep the metric's large
+   type (the base .metric span rule styles the label small), use tabular
+   figures so the width does not jitter while counting, and inherit the
+   print size (40pt) on paper. No-JS and reduced-motion users always see
+   the final reported value, because the animation only ever runs in JS. */
+.metric span.metric-value{display:inline;font-size:inherit;font-weight:inherit;letter-spacing:inherit;line-height:inherit;margin-top:0;font-variant-numeric:tabular-nums}
