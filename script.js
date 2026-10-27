@@ -126,6 +126,9 @@ if (ringFg) {
 // CSS; this reuses the existing rAF progress update to add a soft shadow
 // once the page has scrolled, with no extra scroll listener.
 const siteHeader = document.querySelector('header');
+// Hero scroll cue (evolution #17): fades out once the reader starts
+// scrolling, reusing the existing rAF progress update below.
+const scrollCue = document.getElementById('scroll-cue');
 if (progressBar) {
   let progressScheduled = false;
   function paintProgress() {
@@ -135,6 +138,7 @@ if (progressBar) {
     progressBar.style.transform = 'scaleX(' + progress.toFixed(4) + ')';
     if (ringFg) ringFg.style.strokeDashoffset = (ringLen * (1 - progress)).toFixed(2);
     if (backTop) backTop.classList.toggle('visible', window.scrollY > 600);
+    if (scrollCue) scrollCue.classList.toggle('dismissed', window.scrollY > 120);
     if (siteHeader) siteHeader.classList.toggle('scrolled', window.scrollY > 8);
   }
   function scheduleProgress() {

@@ -114,7 +114,7 @@ body{font-size:11pt;line-height:1.5;background:#fff;color:#111}
 .js .reveal{opacity:1;translate:none}
 /* Hide interactive chrome: nav, progress bar, hero index, ticker,
    CTAs that duplicate content, and the copy-email widget */
-nav,.scroll-progress,.hero-index,.ticker,.hero-actions,.copy-btn,.heading-anchor,
+nav,.scroll-progress,.hero-index,.ticker,.hero-actions,.scroll-cue,.copy-btn,.heading-anchor,
 .availability .status-dot,.typed-caret{display:none!important}
 header{padding:0 0 10px;border-bottom:2px solid #111}
 .hero{padding:24px 0}
@@ -225,3 +225,24 @@ header.scrolled{box-shadow:0 4px 16px rgba(23,25,35,.10)}
    print size (40pt) on paper. No-JS and reduced-motion users always see
    the final reported value, because the animation only ever runs in JS. */
 .metric span.metric-value{display:inline;font-size:inherit;font-weight:inherit;letter-spacing:inherit;line-height:inherit;margin-top:0;font-variant-numeric:tabular-nums}
+
+/* ---- Hero scroll cue (evolution #17: "Scroll" + animated line under the hero CTAs) ----
+   A small text cue with a brand-blue vertical line invites the first
+   scroll toward Selected work. The line gently pulses (scaleY) only for
+   hover-capable pointers without a reduced-motion preference; everyone
+   else sees a static line. Once the reader scrolls past 120px the cue
+   fades out (toggled by the existing rAF progress update in script.js,
+   no new scroll listener) and returns when back at the top. Without JS
+   it is a plain anchor to #work; on paper it is hidden like the other
+   hero chrome. Dark theme adapts via CSS variables. */
+.scroll-cue{display:flex;flex-direction:column;align-items:flex-start;gap:8px;margin-top:38px;font-size:12px;font-weight:700;letter-spacing:1.7px;color:var(--muted);transition:opacity .3s ease,visibility 0s linear .3s}
+.scroll-cue:hover{text-decoration:none;color:var(--ink)}
+.scroll-cue-line{display:block;width:1px;height:34px;background:var(--blue);transform-origin:0 0}
+.scroll-cue.dismissed{opacity:0;visibility:hidden;pointer-events:none}
+/* The reveal entrance rule above would otherwise win this element's
+   transition, making the fade-out snap instead of fading. */
+.js .scroll-cue{transition:opacity .3s ease,visibility 0s linear .3s}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){.scroll-cue-line{animation:cue-drop 2.2s ease-in-out infinite}}
+@keyframes cue-drop{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.45)}}
+@media(prefers-reduced-motion:reduce){.scroll-cue{transition:none}.scroll-cue-line{animation:none}}
+@media(max-width:800px){.scroll-cue{margin-top:30px}}
