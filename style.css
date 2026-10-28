@@ -246,3 +246,24 @@ header.scrolled{box-shadow:0 4px 16px rgba(23,25,35,.10)}
 @keyframes cue-drop{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.45)}}
 @media(prefers-reduced-motion:reduce){.scroll-cue{transition:none}.scroll-cue-line{animation:none}}
 @media(max-width:800px){.scroll-cue{margin-top:30px}}
+/* ---- Featured project: full-width card with a CSS bar chart ----
+   The e-commerce analytics card spans both grid columns, visual on the
+   left and text on the right. The chart is plain divs: each bar's height
+   is its review score out of 5 (--v), green for on-time, coral for late.
+   Stacks to one column on narrow screens. */
+.project.featured{grid-column:1/-1;display:grid;grid-template-columns:1.05fr 1fr}
+.project.featured .project-visual{height:auto;min-height:420px;gap:18px}
+.delay-chart{display:flex;flex-direction:column;gap:22px}
+.delay-headline{font-size:56px;font-weight:800;letter-spacing:-3px;line-height:1}
+.delay-headline .arrow{opacity:.5;margin:0 10px;font-weight:400}
+.delay-headline em{font-style:normal;color:#ff8f7d}
+.delay-headline small{display:block;font-size:12px;font-weight:600;letter-spacing:1.5px;margin-top:12px;opacity:.85}
+.delay-bars{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;align-items:end;height:170px}
+.delay-bars .bar{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:6px}
+.delay-bars .bar i{display:block;width:100%;height:calc(var(--v) / 5 * 112px);border-radius:4px 4px 0 0;background:#d9ef7e}
+.delay-bars .bar.late i{background:#ff8f7d}
+.delay-bars .bar b{font-size:13px;font-variant-numeric:tabular-nums}
+.delay-bars .bar span{font-size:11px;letter-spacing:.5px;opacity:.75;white-space:nowrap}
+@media(max-width:800px){.project.featured{grid-template-columns:1fr}.project.featured .project-visual{min-height:0}.delay-headline{font-size:44px}}
+@media(max-width:580px){.delay-bars{gap:7px}.delay-bars .bar span{font-size:10px;white-space:normal;text-align:center;line-height:1.2}}
+@media print{.project.featured{display:block}.delay-bars .bar i{background:#bbb!important}.delay-bars .bar.late i{background:#111!important}.delay-headline em{color:#111}}

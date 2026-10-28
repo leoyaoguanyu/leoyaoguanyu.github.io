@@ -267,14 +267,14 @@ document.querySelectorAll('.heading-anchor').forEach(anchor => {
 });
 
 // Typewriter in the hero intro: cycles through what Leo builds
-// ("web applications", "data pipelines", "ML models", "REST APIs").
+// ("web applications", "data pipelines", "dashboards", "ML models", "REST APIs").
 // Without JS or with reduced motion the first phrase stays as plain
 // static text; the animated word is aria-hidden, so screen readers
 // hear the full static list in the visually-hidden span instead.
 // Timers pause while the tab is hidden.
 const typedWord = document.getElementById('typed-word');
 if (typedWord && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
-  const phrases = ['web applications', 'data pipelines', 'ML models', 'REST APIs'];
+  const phrases = ['web applications', 'data pipelines', 'dashboards', 'ML models', 'REST APIs'];
   let phrase = 0, pos = phrases[0].length, mode = 'hold', timer = null;
   function later(ms, fn) {
     clearTimeout(timer);
