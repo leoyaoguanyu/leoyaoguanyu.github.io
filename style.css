@@ -267,3 +267,19 @@ header.scrolled{box-shadow:0 4px 16px rgba(23,25,35,.10)}
 @media(max-width:800px){.project.featured{grid-template-columns:1fr}.project.featured .project-visual{min-height:0}.delay-headline{font-size:44px}}
 @media(max-width:580px){.delay-bars{gap:7px}.delay-bars .bar span{font-size:10px;white-space:normal;text-align:center;line-height:1.2}}
 @media print{.project.featured{display:block}.delay-bars .bar i{background:#bbb!important}.delay-bars .bar.late i{background:#111!important}.delay-headline em{color:#111}}
+
+/* ---- Project details expand animation (evolution #18: "Inside the project"
+   opens with a fade-slide) ----
+   Each project card's <details> block used to snap open instantly.
+   Now the detail body fades in while sliding down 6px over 0.3s when
+   opened, so the extra engineering/methodology content feels like it
+   unfolds rather than jumps in. Pure CSS, no JS, no markup change:
+   the native <details> keyboard and screen-reader behaviour is untouched,
+   and closing still snaps shut instantly (the standard simple pattern).
+   Reduced-motion users keep the instant open; on paper the animation
+   is disabled so printed details render in their final state. */
+@keyframes detail-reveal{from{opacity:0;translate:0 -6px}to{opacity:1;translate:0 0}}
+@media(prefers-reduced-motion:no-preference){
+details[open] .detail-body{animation:detail-reveal .3s ease}
+}
+@media print{details[open] .detail-body{animation:none}}
