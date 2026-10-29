@@ -283,3 +283,23 @@ header.scrolled{box-shadow:0 4px 16px rgba(23,25,35,.10)}
 details[open] .detail-body{animation:detail-reveal .3s ease}
 }
 @media print{details[open] .detail-body{animation:none}}
+
+/* ---- Project visual zoom on hover (evolution #19: card artwork grows) ----
+   Hovering a project card already lifts the whole card; now the artwork
+   inside its visual banner also grows 3% in place, like the image-zoom
+   hover on classic portfolio cards. Transform-only, so the card and its
+   neighbours never move: .project-visual already clips with
+   overflow:hidden, and the cursor-spotlight ::after is untouched.
+   Keyboard users get the same zoom via :focus-within when tabbing to a
+   link inside the card; touch and prefers-reduced-motion users see the
+   artwork static, as before. Pure CSS, no JS, no markup change. */
+.project-visual>*{transition:transform .35s ease}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+.project:hover .project-visual>*{transform:scale(1.03)}
+}
+@media(prefers-reduced-motion:no-preference){
+.project:focus-within .project-visual>*{transform:scale(1.03)}
+}
+@media(prefers-reduced-motion:reduce){
+.project-visual>*{transition:none}
+}
