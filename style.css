@@ -303,3 +303,20 @@ details[open] .detail-body{animation:detail-reveal .3s ease}
 @media(prefers-reduced-motion:reduce){
 .project-visual>*{transition:none}
 }
+
+/* ---- External-link indicator (evolution #20: small arrow on links that
+   leave the site) ----
+   Contact links (LinkedIn / GitHub) and the "read more" links inside
+   project details now carry a small ↗, so a recruiter can tell at a glance
+   which links open an external site. The repository links keep their own
+   existing → and the GitHub nav pill stays clean, so neither gets a
+   second arrow; mailto links are untouched. Pure CSS, no JS, no markup
+   change, no animation — so touch, keyboard and prefers-reduced-motion
+   users see the same static marker. Dark theme adapts via inheritance;
+   on paper the marker is replaced by the existing printed URL. */
+.contact-links a[href^="http"]::after,
+.detail-body a[href^="http"]::after{content:" \2197";font-size:.85em}
+@media print{
+.contact-links a[href^="http"]::after,
+.detail-body a[href^="http"]::after{content:" (" attr(href) ")";font-size:80%;word-break:break-all}
+}
