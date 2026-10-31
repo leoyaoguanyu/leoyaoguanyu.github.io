@@ -320,3 +320,12 @@ details[open] .detail-body{animation:detail-reveal .3s ease}
 .contact-links a[href^="http"]::after,
 .detail-body a[href^="http"]::after{content:" (" attr(href) ")";font-size:80%;word-break:break-all}
 }
+
+/* ---- Branded text selection (evolution #21: selection matches the site
+   palette instead of the browser default) ----
+   Light theme: brand blue with white text. Dark theme: lime accent with
+   dark text, for contrast against the dark background. Pure CSS, no JS,
+   no markup change, no animation — so touch, keyboard and
+   prefers-reduced-motion users are unaffected, and print is untouched. */
+::selection,::-moz-selection{background:var(--blue);color:#fff;text-shadow:none}
+[data-theme="dark"] ::selection,[data-theme="dark"] ::-moz-selection{background:#d9ef7e;color:#182219}
