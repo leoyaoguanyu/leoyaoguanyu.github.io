@@ -329,3 +329,15 @@ details[open] .detail-body{animation:detail-reveal .3s ease}
    prefers-reduced-motion users are unaffected, and print is untouched. */
 ::selection,::-moz-selection{background:var(--blue);color:#fff;text-shadow:none}
 [data-theme="dark"] ::selection,[data-theme="dark"] ::-moz-selection{background:#d9ef7e;color:#182219}
+
+/* ---- Hero dot-grid texture (evolution #22: subtle dotted backdrop) ----
+   The hero used to sit on a flat background; now a faint 26px dot grid
+   (1px dots, ~10% ink) gives the first screen a quiet texture without
+   competing with the headline — the restrained-background move seen on
+   minimal portfolios. Static, so reduced-motion, touch and keyboard
+   users see exactly the same thing; no JS, no markup change, no extra
+   asset. Dark theme gets the same grid in light ink; on paper the
+   grid is dropped so the print sheet stays clean. */
+.hero{background-image:radial-gradient(rgba(23,25,35,.10) 1px,transparent 1.4px);background-size:26px 26px}
+[data-theme="dark"] .hero{background-image:radial-gradient(rgba(237,240,247,.12) 1px,transparent 1.4px)}
+@media print{.hero{background-image:none}}
