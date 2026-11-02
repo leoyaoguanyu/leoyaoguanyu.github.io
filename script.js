@@ -70,6 +70,29 @@ themeToggle.addEventListener('click', () => {
 });
 paintToggle();
 
+// Follow the OS theme live, but only while the visitor has never picked
+// a theme manually: the toggle above stores 'leo-theme', and a stored
+// choice always wins over later system changes. Visitors who never
+// touch the toggle see the site track a sunset OS switch (or a
+// scheduled dark-mode flip) without reloading. No visual change on
+// load, no animation, and the existing theme-transition rules apply.
+(function followSystemTheme() {
+  var darkQuery = matchMedia('(prefers-color-scheme: dark)');
+  function onSystemThemeChange(event) {
+    try {
+      if (localStorage.getItem('leo-theme')) return;
+    } catch (e) {}
+    if (event.matches) { rootEl.dataset.theme = 'dark'; }
+    else { delete rootEl.dataset.theme; }
+    paintToggle();
+  }
+  if (darkQuery.addEventListener) {
+    darkQuery.addEventListener('change', onSystemThemeChange);
+  } else if (darkQuery.addListener) {
+    darkQuery.addListener(onSystemThemeChange);
+  }
+})();
+
 // Scroll reveal: tagged sections rise and fade in as they enter the viewport,
 // project cards staggered. No-JS and reduced-motion users see everything as-is.
 if ('IntersectionObserver' in window && matchMedia('(prefers-reduced-motion: no-preference)').matches) {
