@@ -341,3 +341,18 @@ details[open] .detail-body{animation:detail-reveal .3s ease}
 .hero{background-image:radial-gradient(rgba(23,25,35,.10) 1px,transparent 1.4px);background-size:26px 26px}
 [data-theme="dark"] .hero{background-image:radial-gradient(rgba(237,240,247,.12) 1px,transparent 1.4px)}
 @media print{.hero{background-image:none}}
+
+/* ---- Filter feedback (evolution #24: count badges + visible result line) ----
+   The Work filter buttons used to hide their scope: a recruiter had to
+   click Software or Data & AI to learn how many projects each holds, and
+   the "Showing N projects" feedback only existed for screen readers.
+   Now each button carries a small muted count (computed in JS from the
+   real project cards, so it cannot drift when cards are added), and the
+   result line above the grid is visible to everyone: "Showing 2 of 5
+   projects" after filtering. No animation, so prefers-reduced-motion
+   users see the same static text; the muted colour adapts to the dark
+   theme via the --muted variable, and the line prints like any other
+   paragraph. No-JS visitors keep the static HTML result line and plain
+   filter buttons (filtering itself already required JS). */
+.filters .filter-count{margin-left:6px;font-size:12px;color:var(--muted)}
+.filter-result{margin:0 0 22px;font-size:14px;color:var(--muted)}

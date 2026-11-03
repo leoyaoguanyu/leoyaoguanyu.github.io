@@ -39,6 +39,24 @@ if (copyBtn) {
 // Filter the real project collection without changing the page location.
 const filters = document.querySelectorAll('[data-filter]');
 const projects = document.querySelectorAll('[data-category]');
+// Count badge on each filter button, computed from the real cards so it
+// can never drift from the grid (all / software / data). Also sets the
+// visible result line from the same counts; no-JS visitors still see the
+// static "Showing 5 of 5 projects" line from the HTML.
+const projectCountEl = document.querySelector('#project-count');
+if (projectCountEl) {
+  projectCountEl.textContent = `Showing ${projects.length} of ${projects.length} projects`;
+}
+filters.forEach(button => {
+  const category = button.dataset.filter;
+  const total = category === 'all'
+    ? projects.length
+    : [...projects].filter(project => project.dataset.category === category).length;
+  const badge = document.createElement('span');
+  badge.className = 'filter-count';
+  badge.textContent = `(${total})`;
+  button.appendChild(badge);
+});
 filters.forEach(button => button.addEventListener('click', () => {
   const category = button.dataset.filter;
   filters.forEach(item => {
@@ -51,7 +69,7 @@ filters.forEach(button => button.addEventListener('click', () => {
     project.hidden = category !== 'all' && project.dataset.category !== category;
     if (!project.hidden) count += 1;
   });
-  document.querySelector('#project-count').textContent = `Showing ${count} projects`;
+  document.querySelector('#project-count').textContent = `Showing ${count} of ${projects.length} projects`;
 }));
 
 // Theme: day/night toggle. Remembers the choice; otherwise follows the OS setting.
