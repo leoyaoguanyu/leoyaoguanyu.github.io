@@ -356,3 +356,22 @@ details[open] .detail-body{animation:detail-reveal .3s ease}
    filter buttons (filtering itself already required JS). */
 .filters .filter-count{margin-left:6px;font-size:12px;color:var(--muted)}
 .filter-result{margin:0 0 22px;font-size:14px;color:var(--muted)}
+
+/* ---- Project details chevron (evolution #25: rotating open/close indicator)
+   The five project cards' "Inside the project" / "Findings & methodology"
+   toggles used to show the browser's default disclosure triangle, which
+   said nothing about the open state. Now the native marker is hidden and
+   a small border-drawn chevron sits flush right: pointing down when
+   closed, rotating 180deg to point up when open, so a recruiter can tell
+   at a glance which card is expanded. Pure CSS, no JS, no markup change;
+   native <details> keyboard and screen-reader behaviour is untouched, and
+   the existing detail-reveal animation is unchanged. Reduced-motion users
+   get the same chevron with no rotation animation; dark theme inherits
+   currentColor; on paper the summary is already hidden by the print
+   stylesheet, so nothing changes there. */
+summary{display:flex;align-items:center;justify-content:space-between;gap:16px;list-style:none}
+summary::-webkit-details-marker{display:none}
+summary::marker{content:none}
+summary::after{content:"";flex:none;width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .2s ease}
+details[open] summary::after{transform:translateY(2px) rotate(225deg)}
+@media(prefers-reduced-motion:reduce){summary::after{transition:none}}
