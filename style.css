@@ -375,3 +375,26 @@ summary::marker{content:none}
 summary::after{content:"";flex:none;width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .2s ease}
 details[open] summary::after{transform:translateY(2px) rotate(225deg)}
 @media(prefers-reduced-motion:reduce){summary::after{transition:none}}
+
+/* ---- Featured chart bars grow on scroll (evolution #26: delay-chart
+   animates into view) ----
+   The e-commerce card's five review-score bars used to sit at full height
+   from the first paint, so the "late orders score far worse" story was
+   static. Now the bars grow from the baseline once the chart scrolls into
+   view, staggered left to right (on-time green first, late coral after),
+   so the drop reads as a small reveal. Transform-only (scaleY) for a
+   GPU-friendly animation, triggered once by IntersectionObserver — the
+   same pattern as the metric counter (#16). The value labels stay put
+   while the bars grow. No-JS and prefers-reduced-motion users always see
+   the full bars (the collapsed state only exists under .js, which the
+   reveal block only adds for no-preference users); on paper the bars
+   print at full height. */
+@media(prefers-reduced-motion:no-preference){
+.js .delay-bars .bar i{transform:scaleY(0);transform-origin:bottom;transition:transform .8s cubic-bezier(.22,.61,.36,1)}
+.js .delay-bars.grown .bar i{transform:scaleY(1)}
+.js .delay-bars.grown .bar:nth-child(2) i{transition-delay:90ms}
+.js .delay-bars.grown .bar:nth-child(3) i{transition-delay:180ms}
+.js .delay-bars.grown .bar:nth-child(4) i{transition-delay:270ms}
+.js .delay-bars.grown .bar:nth-child(5) i{transition-delay:360ms}
+}
+@media print{.delay-bars .bar i{transform:none!important}}

@@ -394,3 +394,26 @@ if (metricValue) {
     counterIo.observe(metricValue);
   }
 }
+
+// Animated delay chart: the featured e-commerce card's five review-score
+// bars grow from the baseline once the chart scrolls into view, staggered
+// left to right (CSS transition-delays), so the on-time vs late gap reads
+// as a reveal rather than a static picture. Runs once; no-JS and
+// prefers-reduced-motion users keep the full bars from the HTML/CSS, and
+// a beforeprint hook forces the grown state so paper never shows flat bars.
+const delayBars = document.querySelector('.delay-bars');
+if (delayBars) {
+  window.addEventListener('beforeprint', () => delayBars.classList.add('grown'));
+  if ('IntersectionObserver' in window &&
+      matchMedia('(prefers-reduced-motion: no-preference)').matches) {
+    const barsIo = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          delayBars.classList.add('grown');
+          barsIo.disconnect();
+        }
+      });
+    }, { threshold: 0.4 });
+    barsIo.observe(delayBars);
+  }
+}
