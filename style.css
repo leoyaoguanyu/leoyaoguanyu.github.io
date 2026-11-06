@@ -398,3 +398,23 @@ details[open] summary::after{transform:translateY(2px) rotate(225deg)}
 .js .delay-bars.grown .bar:nth-child(5) i{transition-delay:360ms}
 }
 @media print{.delay-bars .bar i{transform:none!important}}
+
+/* ---- Clickable tech tags (evolution #27: filter projects by technology)
+   The tag chips on each project card used to be static labels. Now they
+   are buttons (progressively enhanced in JS from the plain <span>s, so
+   no-JS visitors keep the static labels): clicking e.g. "Python" shows
+   only the projects that use Python, and the result line names the active
+   tag — "Showing 3 of 5 projects · Python". Clicking the active tag again
+   (or any category button above) clears the filter. The pattern follows
+   caferati.dev ("filter by technologies used in projects… only projects
+   with this technology are shown") and claudiabdm.com, via the Udemy
+   portfolio roundup. Hover gets a brand-blue outline, the active tag
+   fills brand blue; dark theme inherits the existing tag palette, and
+   on paper the chips print like the old static labels. */
+.tags button{font-size:12px;background:#f2f3f7;padding:4px 10px;border-radius:5px;color:#444b5d;border:1px solid transparent;cursor:pointer}
+.tags button:hover{border-color:var(--blue);color:var(--blue)}
+.tags button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+[data-theme="dark"] .tags button{background:#212a3c;color:#aeb9cf}
+[data-theme="dark"] .tags button:hover{border-color:var(--blue);color:var(--blue)}
+[data-theme="dark"] .tags button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
+@media(prefers-reduced-motion:no-preference){.tags button{transition:background-color .35s ease,color .35s ease,border-color .35s ease}}

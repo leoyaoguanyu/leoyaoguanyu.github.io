@@ -59,6 +59,9 @@ filters.forEach(button => {
 });
 filters.forEach(button => button.addEventListener('click', () => {
   const category = button.dataset.filter;
+  // A category pick clears any active tag filter (see tag filter below),
+  // so the two filters never contradict each other.
+  clearTagFilter();
   filters.forEach(item => {
     const selected = item === button;
     item.classList.toggle('active', selected);
@@ -417,3 +420,64 @@ if (delayBars) {
     barsIo.observe(delayBars);
   }
 }
+
+// Clickable tech tags: the tag chips on each project card filter the grid
+// by that technology, so a recruiter can jump straight to the Python work
+// (or React, or SQL) instead of scanning every card. Clicking the active
+// tag again clears the filter; picking a category above also clears it
+// (the category handler calls clearTagFilter). The chips are plain <span>s
+// in the HTML and only become buttons here, so no-JS visitors keep the
+// static labels. The visible result line names the active tag and keeps
+// its aria-live announcements; every chip carrying the active tag lights
+// up, since the same technology appears on several cards. No animation,
+// so reduced-motion users see the same static filter; dark theme and
+// print are handled by the matching CSS rules.
+const tagButtons = [];
+document.querySelectorAll('.project .tags span').forEach(span => {
+  const button = document.createElement('button');
+  button.type = 'button';
+  button.textContent = span.textContent;
+  button.setAttribute('aria-pressed', 'false');
+  span.replaceWith(button);
+  tagButtons.push(button);
+});
+let activeTag = null;
+const tagResultLine = document.querySelector('#project-count');
+function paintTagButtons() {
+  tagButtons.forEach(btn => {
+    const pressed = activeTag !== null && btn.textContent === activeTag;
+    btn.classList.toggle('active', pressed);
+    btn.setAttribute('aria-pressed', String(pressed));
+    btn.setAttribute('aria-label', pressed
+      ? 'Show all projects (clear ' + btn.textContent + ' filter)'
+      : 'Show only projects using ' + btn.textContent);
+  });
+}
+function clearTagFilter() {
+  if (activeTag === null) return;
+  activeTag = null;
+  paintTagButtons();
+}
+function applyTagFilter(tag) {
+  activeTag = activeTag === tag ? null : tag;
+  // A tag filter replaces the category filter: reset the category buttons
+  // to "All work" so the two filters never contradict each other.
+  filters.forEach(item => {
+    const selected = item.dataset.filter === 'all';
+    item.classList.toggle('active', selected);
+    item.setAttribute('aria-pressed', String(selected));
+  });
+  let count = 0;
+  projects.forEach(project => {
+    const tags = [...project.querySelectorAll('.tags button')].map(el => el.textContent);
+    project.hidden = activeTag !== null && !tags.includes(activeTag);
+    if (!project.hidden) count += 1;
+  });
+  if (tagResultLine) {
+    tagResultLine.textContent = activeTag === null
+      ? 'Showing ' + count + ' of ' + projects.length + ' projects'
+      : 'Showing ' + count + ' of ' + projects.length + ' projects · ' + activeTag;
+  }
+  paintTagButtons();
+}
+tagButtons.forEach(button => button.addEventListener('click', () => applyTagFilter(button.textContent)));
