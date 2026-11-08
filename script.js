@@ -272,6 +272,36 @@ if (localTimeEl && typeof Intl !== 'undefined' && typeof Intl.DateTimeFormat ===
   }
 }
 
+// Last-updated stamp in the footer: read the newest commit date from the
+// public GitHub API and show "Updated Nov 7, 2026" as a link to that
+// commit, so a recruiter can see at a glance that the site is actively
+// maintained. No API key, no build step, no animation; if fetch or the
+// API fails, the element stays hidden and the footer looks exactly as
+// before. The date is shown in the site's home timezone (Toronto).
+const lastUpdatedEl = document.getElementById('last-updated');
+if (lastUpdatedEl && typeof fetch === 'function' && typeof Intl !== 'undefined' &&
+    typeof Intl.DateTimeFormat === 'function') {
+  fetch('https://api.github.com/repos/leoyaoguanyu/leoyaoguanyu.github.io/commits?per_page=1')
+    .then(response => {
+      if (!response.ok) throw new Error('GitHub API ' + response.status);
+      return response.json();
+    })
+    .then(commits => {
+      const latest = Array.isArray(commits) ? commits[0] : null;
+      const date = latest && latest.commit && latest.commit.committer &&
+        latest.commit.committer.date;
+      const parsed = date ? new Date(date) : null;
+      if (!latest || !latest.html_url || !parsed || isNaN(parsed)) return;
+      const stamp = new Intl.DateTimeFormat('en-US', {
+        month: 'short', day: 'numeric', year: 'numeric', timeZone: 'America/Toronto'
+      }).format(parsed);
+      lastUpdatedEl.textContent = 'Updated ' + stamp;
+      lastUpdatedEl.href = latest.html_url;
+      lastUpdatedEl.removeAttribute('hidden');
+    })
+    .catch(() => { /* stay hidden; the footer is unchanged */ });
+}
+
 // Section deep-links: each section heading carries a link button that copies
 // a shareable URL (…/#work). Without JS it degrades to a plain anchor jump.
 // Same clipboard strategy as the email copy button; feedback is an instant
