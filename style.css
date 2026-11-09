@@ -418,3 +418,11 @@ details[open] summary::after{transform:translateY(2px) rotate(225deg)}
 [data-theme="dark"] .tags button:hover{border-color:var(--blue);color:var(--blue)}
 [data-theme="dark"] .tags button[aria-pressed="true"]{background:var(--blue);border-color:var(--blue);color:#fff}
 @media(prefers-reduced-motion:no-preference){.tags button{transition:background-color .35s ease,color .35s ease,border-color .35s ease}}
+/* ---- Numbered section headings (evolution #30: "01 / 02 / 03" prefix) ----
+   Each h2 carries a small brand-blue number (aria-hidden, so screen readers
+   hear the plain heading). The size is em-relative, so it scales with each
+   heading (44px section titles, larger contact title); on the blue contact
+   block the number switches to the same lime as the heading's full stop.
+   Static text, no animation, dark theme inherits --blue, prints as-is. */
+.section-num{color:var(--blue);font-size:.42em;font-weight:700;letter-spacing:0;margin-right:.65em}
+.contact .section-num{color:#d9ef7e}
