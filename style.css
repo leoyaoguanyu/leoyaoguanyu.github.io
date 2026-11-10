@@ -330,6 +330,25 @@ details[open] .detail-body{animation:detail-reveal .3s ease}
 ::selection,::-moz-selection{background:var(--blue);color:#fff;text-shadow:none}
 [data-theme="dark"] ::selection,[data-theme="dark"] ::-moz-selection{background:#d9ef7e;color:#182219}
 
+/* ---- Branded scrollbar (evolution #31: slim brand-blue scrollbar) ----
+   The default grey scrollbar clashed with the site palette — on Windows,
+   where scrollbars are always visible, it was the one chrome element
+   that still looked like the browser, not the site. Now the thumb is a
+   slim muted slate (brand blue on hover) with a transparent track, so
+   the bar reads as part of the page; Firefox gets the same pair via the
+   standard scrollbar-color/scrollbar-width properties, and the dark
+   theme gets a lighter thumb for contrast. Pure CSS, no JS, no markup
+   change, no animation — touch, keyboard and prefers-reduced-motion
+   users are unaffected, and print is untouched. */
+html{scrollbar-width:thin;scrollbar-color:#8a93a8 transparent}
+html[data-theme="dark"]{scrollbar-color:#3a4358 transparent}
+::-webkit-scrollbar{width:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#8a93a8;border-radius:6px;border:2px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:var(--blue)}
+[data-theme="dark"] ::-webkit-scrollbar-thumb{background:#3a4358}
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover{background:var(--blue)}
+
 /* ---- Hero dot-grid texture (evolution #22: subtle dotted backdrop) ----
    The hero used to sit on a flat background; now a faint 26px dot grid
    (1px dots, ~10% ink) gives the first screen a quiet texture without
