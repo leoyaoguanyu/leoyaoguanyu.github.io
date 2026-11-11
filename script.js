@@ -272,6 +272,34 @@ if (localTimeEl && typeof Intl !== 'undefined' && typeof Intl.DateTimeFormat ===
   }
 }
 
+// Time-of-day greeting in the hero eyebrow, on Hamilton time (the same
+// Toronto clock as the availability badge): "GOOD MORNING · COMPUTER
+// SCIENCE · McMASTER UNIVERSITY", afternoon and evening likewise. No-JS
+// users keep the static eyebrow text; the greeting only rewrites it when
+// Intl is available. Plain text swap, no animation, so reduced-motion
+// users see the same static line; re-checked every minute so a page left
+// open rolls over the boundary on its own.
+const heroEyebrowEl = document.getElementById('hero-eyebrow');
+if (heroEyebrowEl && typeof Intl !== 'undefined' && typeof Intl.DateTimeFormat === 'function') {
+  let hourFmt = null;
+  try {
+    hourFmt = new Intl.DateTimeFormat('en-US', {
+      hour: 'numeric', hour12: false, timeZone: 'America/Toronto'
+    });
+  } catch (e) { hourFmt = null; }
+  if (hourFmt) {
+    const updateGreeting = () => {
+      const hour = Number(hourFmt.format(new Date())) % 24;
+      const greeting = hour >= 5 && hour < 12 ? 'GOOD MORNING'
+        : hour >= 12 && hour < 17 ? 'GOOD AFTERNOON' : 'GOOD EVENING';
+      heroEyebrowEl.textContent =
+        greeting + ' · COMPUTER SCIENCE · McMASTER UNIVERSITY';
+    };
+    updateGreeting();
+    setInterval(updateGreeting, 60000);
+  }
+}
+
 // Last-updated stamp in the footer: read the newest commit date from the
 // public GitHub API and show "Updated Nov 7, 2026" as a link to that
 // commit, so a recruiter can see at a glance that the site is actively
