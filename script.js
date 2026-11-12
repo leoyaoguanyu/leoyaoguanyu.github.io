@@ -85,9 +85,33 @@ function paintToggle() {
   themeToggle.setAttribute('aria-pressed', String(dark));
 }
 themeToggle.addEventListener('click', () => {
-  if (isDark()) { delete rootEl.dataset.theme; } else { rootEl.dataset.theme = 'dark'; }
-  try { localStorage.setItem('leo-theme', isDark() ? 'dark' : 'light'); } catch (e) {}
-  paintToggle();
+  const nextDark = !isDark();
+  const applyTheme = () => {
+    if (nextDark) { rootEl.dataset.theme = 'dark'; } else { delete rootEl.dataset.theme; }
+    try { localStorage.setItem('leo-theme', nextDark ? 'dark' : 'light'); } catch (e) {}
+    paintToggle();
+  };
+  // Circular wipe from the toggle button (evolution #33, View Transitions
+  // API): the new theme spreads out from the button instead of swapping
+  // instantly. Browsers without the API, and reduced-motion users, keep
+  // the instant switch; the system-driven change below never animates.
+  // The .35s colour transitions are frozen during the wipe so the
+  // captured snapshots show the final colours, not a mid-fade.
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!document.startViewTransition || reduceMotion) { applyTheme(); return; }
+  const rect = themeToggle.getBoundingClientRect();
+  const x = rect.left + rect.width / 2;
+  const y = rect.top + rect.height / 2;
+  const endRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+  rootEl.classList.add('theme-animating');
+  const transition = document.startViewTransition(applyTheme);
+  transition.ready.then(() => {
+    rootEl.animate(
+      { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${endRadius}px at ${x}px ${y}px)`] },
+      { duration: 450, easing: 'ease-out', pseudoElement: '::view-transition-new(root)' }
+    );
+  }).catch(() => {});
+  transition.finished.finally(() => rootEl.classList.remove('theme-animating'));
 });
 paintToggle();
 

@@ -22,6 +22,18 @@
 [data-theme="dark"] .theme-toggle .icon-moon{display:none}
 @media(prefers-reduced-motion:no-preference){body,.skip,.filters button,.project,.tags span,.theme-toggle{transition:background-color .35s ease,color .35s ease,border-color .35s ease}.project{transition:background-color .35s ease,border-color .35s ease,box-shadow .2s ease,transform .2s ease}}
 
+/* ---- Theme-switch wipe (evolution #33): the new theme spreads as a
+   circle from the toggle button, via the View Transitions API (see
+   script.js). The default cross-fade is switched off so only the wipe
+   shows, and the .35s colour transitions above are frozen while the
+   wipe runs so the snapshots show final colours. Browsers without the
+   API ignore this; reduced-motion users never start a transition. */
+::view-transition-old(root),
+::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-old(root){z-index:1}
+::view-transition-new(root){z-index:2147483646}
+html.theme-animating *{transition:none!important}
+
 /* ---- Copy-email button (evolution #3: one-click email copy in contact) ---- */
 .email-copy{display:inline-flex;align-items:center;gap:10px;flex-wrap:wrap}
 .copy-btn{display:inline-flex;align-items:center;gap:6px;border:1px solid #ffffff66;background:transparent;color:#fff;border-radius:20px;padding:5px 13px;font-size:12px;font-weight:700;cursor:pointer}
