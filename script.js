@@ -73,6 +73,7 @@ filters.forEach(button => button.addEventListener('click', () => {
     if (!project.hidden) count += 1;
   });
   document.querySelector('#project-count').textContent = `Showing ${count} of ${projects.length} projects`;
+  paintToggleAll();
 }));
 
 // Theme: day/night toggle. Remembers the choice; otherwise follows the OS setting.
@@ -561,5 +562,50 @@ function applyTagFilter(tag) {
       : 'Showing ' + count + ' of ' + projects.length + ' projects · ' + activeTag;
   }
   paintTagButtons();
+  paintToggleAll();
 }
 tagButtons.forEach(button => button.addEventListener('click', () => applyTagFilter(button.textContent)));
+
+// Expand/collapse all project details: one click opens (or closes) every
+// visible project's <details>, so a recruiter can read all five write-ups
+// without opening each card by hand. The button is created here, so no-JS
+// visitors never see a dead control; it sits in its own toolbar row above
+// the result line. Its label follows the real state — "Collapse all" only
+// when every visible card is open — and repaints whenever a card is toggled
+// by hand (the 'toggle' listener below) or the category/tag filters change
+// which cards are visible (those handlers call paintToggleAll; this
+// function declaration is hoisted, so the earlier handlers can reach it,
+// and they only ever run on clicks, after this whole script has evaluated).
+// Only visible cards are toggled, so a filtered view is never disturbed by
+// hidden cards. Native <details> keyboard and screen-reader behaviour is
+// untouched; aria-expanded on the button mirrors the all-open state.
+const projectDetails = [...document.querySelectorAll('.project details')];
+const detailsToggleBtn = document.createElement('button');
+const detailsToolbar = document.createElement('div');
+const projectCountLine = document.querySelector('#project-count');
+function visibleDetails() {
+  return projectDetails.filter(detail => !detail.closest('.project').hidden);
+}
+function paintToggleAll() {
+  const visible = visibleDetails();
+  const allOpen = visible.length > 0 && visible.every(detail => detail.open);
+  detailsToggleBtn.textContent = allOpen ? 'Collapse all' : 'Expand all';
+  detailsToggleBtn.setAttribute('aria-expanded', String(allOpen));
+}
+if (projectDetails.length > 0 && projectCountLine) {
+  detailsToggleBtn.type = 'button';
+  detailsToggleBtn.className = 'details-toggle';
+  detailsToggleBtn.setAttribute('aria-label',
+    'Expand or collapse all project details');
+  detailsToolbar.className = 'details-toolbar';
+  detailsToolbar.appendChild(detailsToggleBtn);
+  projectCountLine.before(detailsToolbar);
+  detailsToggleBtn.addEventListener('click', () => {
+    const visible = visibleDetails();
+    const open = !(visible.length > 0 && visible.every(detail => detail.open));
+    visible.forEach(detail => { detail.open = open; });
+    paintToggleAll();
+  });
+  projectDetails.forEach(detail => detail.addEventListener('toggle', paintToggleAll));
+  paintToggleAll();
+}

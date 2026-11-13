@@ -126,7 +126,7 @@ body{font-size:11pt;line-height:1.5;background:#fff;color:#111}
 .js .reveal{opacity:1;translate:none}
 /* Hide interactive chrome: nav, progress bar, hero index, ticker,
    CTAs that duplicate content, and the copy-email widget */
-nav,.scroll-progress,.hero-index,.ticker,.hero-actions,.scroll-cue,.copy-btn,.heading-anchor,
+nav,.scroll-progress,.hero-index,.ticker,.hero-actions,.scroll-cue,.copy-btn,.heading-anchor,.details-toolbar,
 .availability .status-dot,.typed-caret{display:none!important}
 header{padding:0 0 10px;border-bottom:2px solid #111}
 .hero{padding:24px 0}
@@ -457,3 +457,19 @@ details[open] summary::after{transform:translateY(2px) rotate(225deg)}
    Static text, no animation, dark theme inherits --blue, prints as-is. */
 .section-num{color:var(--blue);font-size:.42em;font-weight:700;letter-spacing:0;margin-right:.65em}
 .contact .section-num{color:#d9ef7e}
+
+/* ---- Expand/collapse all project details (evolution #34: one-click open/close)
+   Five project cards each hide their write-up behind a <details> fold, so a
+   recruiter scanning the work has to open each one by hand. A small pill
+   button above the grid — "Expand all" / "Collapse all" — opens or closes
+   every visible card at once (NSW Digital Design System: "allows users to
+   perform the action to all accordions, reducing time and clicks to reach
+   the required information"; same pattern in Canada.ca's design system).
+   The button is created in JS, so no-JS visitors never see a dead control;
+   it is hidden on paper (print already expands every details block).
+   No animation of its own; the per-card detail-reveal animation still
+   applies, and reduced-motion users get the same instant open/close. */
+.details-toolbar{display:flex;justify-content:flex-end;margin-bottom:14px}
+.details-toggle{border:1px solid var(--line);background:transparent;padding:8px 15px;border-radius:25px;font-size:14px;font-weight:600;cursor:pointer;color:var(--muted)}
+.details-toggle:hover{border-color:var(--ink);color:var(--ink)}
+@media(max-width:800px){.details-toolbar{justify-content:flex-start}}
