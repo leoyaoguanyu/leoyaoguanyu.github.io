@@ -175,6 +175,29 @@ if (canSpotlight) {
   });
 }
 
+// 3D tilt: project cards lean toward the pointer like a physical card
+// catching the light (evolution #35). Same gate as the spotlight above:
+// hover-capable fine pointers only, never for reduced-motion users.
+// Angles stay small (max 4deg) so a grid of cards never feels seasick;
+// leaving the card resets the angles and the existing .2s transform
+// transition eases it flat again, while the hover lift (-3px) is kept in
+// the same transform in CSS so the two effects stack.
+if (canSpotlight) {
+  document.querySelectorAll('.project').forEach(card => {
+    card.addEventListener('pointermove', event => {
+      const rect = card.getBoundingClientRect();
+      const px = (event.clientX - rect.left) / rect.width - 0.5;
+      const py = (event.clientY - rect.top) / rect.height - 0.5;
+      card.style.setProperty('--ry', (px * 8).toFixed(2) + 'deg');
+      card.style.setProperty('--rx', (-py * 8).toFixed(2) + 'deg');
+    });
+    card.addEventListener('pointerleave', () => {
+      card.style.setProperty('--rx', '0deg');
+      card.style.setProperty('--ry', '0deg');
+    });
+  });
+}
+
 // Scroll progress bar: a razor-thin bar at the top edge fills as the page is
 // read. Transform-only updates coalesced through rAF; no transitions, so it
 // stays accurate and animation-free for reduced-motion users.

@@ -473,3 +473,18 @@ details[open] summary::after{transform:translateY(2px) rotate(225deg)}
 .details-toggle{border:1px solid var(--line);background:transparent;padding:8px 15px;border-radius:25px;font-size:14px;font-weight:600;cursor:pointer;color:var(--muted)}
 .details-toggle:hover{border-color:var(--ink);color:var(--ink)}
 @media(max-width:800px){.details-toolbar{justify-content:flex-start}}
+
+/* ---- 3D tilt on project cards (evolution #35: cards lean toward the pointer) ----
+   Hovering a project card already lifts it (-3px) and zooms its artwork;
+   now the whole card also leans a few degrees toward the pointer, like a
+   physical card catching the light. The angles arrive as JS custom
+   properties (--rx/--ry, max 4deg) set on pointermove; the existing .2s
+   transform transition eases the card flat again on leave, so there is no
+   snap. The lift is kept in the same transform, so the two effects stack.
+   Hover-capable fine pointers only, never for reduced-motion users (the
+   media gate); touch and no-JS visitors keep the static cards, and print
+   is untouched (this rule lives outside the print block). */
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+.project{transform-style:preserve-3d}
+.project:hover{transform:perspective(1000px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-3px)}
+}
