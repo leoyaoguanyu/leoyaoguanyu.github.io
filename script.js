@@ -57,6 +57,32 @@ filters.forEach(button => {
   badge.textContent = `(${total})`;
   button.appendChild(badge);
 });
+// Filter-change entrance (evolution #36): after a category or tag filter
+// changes which cards are visible, the survivors fade in and rise 10px
+// with a 70ms stagger, so the new set reads as one fresh arrangement
+// instead of a hard cut. Cards still below the fold are skipped — their
+// scroll-reveal entrance still owns them — and reduced-motion users keep
+// the instant swap (the CSS media gate means the class is a no-op there
+// anyway). The class is removed on animationend so the card returns to
+// its plain styles; removing and re-adding it with a forced reflow
+// replays the entrance when the filter is picked again.
+function animateVisibleCards() {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  let index = 0;
+  projects.forEach(project => {
+    if (project.hidden) return;
+    if (project.classList.contains('reveal')
+      && !project.classList.contains('revealed')) return;
+    project.style.setProperty('--enter-delay', (index * 70) + 'ms');
+    project.classList.remove('filter-enter');
+    void project.offsetWidth;
+    project.classList.add('filter-enter');
+    project.addEventListener('animationend', () => {
+      project.classList.remove('filter-enter');
+    }, { once: true });
+    index += 1;
+  });
+}
 filters.forEach(button => button.addEventListener('click', () => {
   const category = button.dataset.filter;
   // A category pick clears any active tag filter (see tag filter below),
@@ -74,6 +100,7 @@ filters.forEach(button => button.addEventListener('click', () => {
   });
   document.querySelector('#project-count').textContent = `Showing ${count} of ${projects.length} projects`;
   paintToggleAll();
+  animateVisibleCards();
 }));
 
 // Theme: day/night toggle. Remembers the choice; otherwise follows the OS setting.
@@ -586,6 +613,7 @@ function applyTagFilter(tag) {
   }
   paintTagButtons();
   paintToggleAll();
+  animateVisibleCards();
 }
 tagButtons.forEach(button => button.addEventListener('click', () => applyTagFilter(button.textContent)));
 
