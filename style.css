@@ -513,3 +513,13 @@ details[open] summary::after{transform:translateY(2px) rotate(225deg)}
 @media print{
 .project.filter-enter{animation:none}
 }
+
+/* ---- Print résumé button (evolution #37: a visible trigger for the
+   print stylesheet) ---- */
+.contact-actions{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.contact-actions .primary{margin-top:0}
+.print-btn{padding:13px 24px;background:transparent;color:#fff;border:1px solid #ffffffaa;border-radius:5px;font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap}
+.print-btn:hover{background:#ffffff22;border-color:#fff}
+.contact button:focus-visible{outline-color:#fff}
+@media(max-width:580px){.contact-actions{margin-top:12px}}
+@media print{.print-btn{display:none!important}}

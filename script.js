@@ -660,3 +660,26 @@ if (projectDetails.length > 0 && projectCountLine) {
   projectDetails.forEach(detail => detail.addEventListener('toggle', paintToggleAll));
   paintToggleAll();
 }
+
+// Print résumé button (evolution #37): the print stylesheet (#9) already
+// turns the page into a clean one-page paper résumé, but nothing on screen
+// told a recruiter it exists. A small outline button next to "Email me"
+// in the contact section opens the browser print dialog. It is created
+// here, so no-JS visitors never see a dead control, and the print sheet
+// hides it on paper. The two buttons share a .contact-actions wrapper so
+// they stay grouped on wide screens and stack neatly on mobile.
+const emailCta = document.querySelector('.contact-bottom .primary.light');
+const contactBottom = document.querySelector('.contact-bottom');
+if (emailCta && contactBottom) {
+  const printBtn = document.createElement('button');
+  printBtn.type = 'button';
+  printBtn.className = 'print-btn';
+  printBtn.textContent = 'Print résumé';
+  printBtn.setAttribute('aria-label', 'Print this page as a one-page résumé');
+  printBtn.addEventListener('click', () => window.print());
+  const contactActions = document.createElement('div');
+  contactActions.className = 'contact-actions';
+  contactBottom.insertBefore(contactActions, emailCta);
+  contactActions.appendChild(emailCta);
+  contactActions.appendChild(printBtn);
+}
