@@ -56,6 +56,17 @@ html.theme-animating *{transition:none!important}
 .contact .heading-anchor:hover,.contact .heading-anchor.copied{color:#fff}
 @media (hover:none){.heading-anchor{opacity:1}}
 
+/* ---- Project deep-links (evolution #38: one shareable link per project) ----
+   Same chain-link button as the section headings, sized down for the 24px
+   project titles. Hovering a project title (or keyboard focus) reveals it;
+   touch devices always show it via the rule above. Clicking copies
+   …/#project-<slug> through the existing .heading-anchor handler, so a
+   recruiter can share one project instead of the whole page. No-JS users
+   get a plain anchor jump to the card; print hides it with the rest. */
+.project h3 .heading-anchor{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;margin-left:4px;vertical-align:middle;border-radius:8px;color:var(--muted);opacity:0}
+.project h3:hover .heading-anchor,.project h3 .heading-anchor:focus-visible{opacity:1}
+.project h3 .heading-anchor svg{width:15px;height:15px}
+
 /* ---- Scroll reveal (evolution #2: staggered entrance on scroll) ---- */
 /* Hidden state only exists under .js, so no-JS users and reduced-motion
    users (JS never adds .js for them) always see the full content. */
