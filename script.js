@@ -57,6 +57,39 @@ filters.forEach(button => {
   badge.textContent = `(${total})`;
   button.appendChild(badge);
 });
+// Roving tabindex for the filter group (evolution #39, WAI-ARIA APG
+// toolbar pattern): the three category buttons are one Tab stop instead
+// of three. Tab lands on the active filter; ArrowLeft/ArrowRight (and
+// Up/Down) move focus between the buttons and wrap at the ends;
+// Home/End jump to the first/last button. Arrows only move focus —
+// Enter/Space still apply the filter, so the grid never changes under a
+// screen-reader user who is just looking around. The tabindex values
+// are only set here, so no-JS visitors keep three plain tab stops.
+// The active button is always the tab stop; activating a filter (or a
+// tag filter resetting the category to "All work") moves it along.
+const filterList = [...filters];
+function setFilterTabStops(activeButton) {
+  filterList.forEach(button => {
+    button.tabIndex = button === activeButton ? 0 : -1;
+  });
+}
+setFilterTabStops(filterList.find(button => button.classList.contains('active')) || filterList[0]);
+document.querySelector('.filters').addEventListener('keydown', event => {
+  const keys = ['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'Home', 'End'];
+  if (!keys.includes(event.key)) return;
+  const current = filterList.indexOf(document.activeElement);
+  if (current === -1) return;
+  event.preventDefault();
+  let next;
+  if (event.key === 'Home') next = 0;
+  else if (event.key === 'End') next = filterList.length - 1;
+  else {
+    const step = (event.key === 'ArrowLeft' || event.key === 'ArrowUp') ? -1 : 1;
+    next = (current + step + filterList.length) % filterList.length;
+  }
+  filterList[next].focus();
+  setFilterTabStops(filterList[next]);
+});
 // Filter-change entrance (evolution #36): after a category or tag filter
 // changes which cards are visible, the survivors fade in and rise 10px
 // with a 70ms stagger, so the new set reads as one fresh arrangement
@@ -93,6 +126,7 @@ filters.forEach(button => button.addEventListener('click', () => {
     item.classList.toggle('active', selected);
     item.setAttribute('aria-pressed', String(selected));
   });
+  setFilterTabStops(button);
   let count = 0;
   projects.forEach(project => {
     project.hidden = category !== 'all' && project.dataset.category !== category;
@@ -600,6 +634,7 @@ function applyTagFilter(tag) {
     item.classList.toggle('active', selected);
     item.setAttribute('aria-pressed', String(selected));
   });
+  setFilterTabStops(filterList.find(item => item.dataset.filter === 'all'));
   let count = 0;
   projects.forEach(project => {
     const tags = [...project.querySelectorAll('.tags button')].map(el => el.textContent);
