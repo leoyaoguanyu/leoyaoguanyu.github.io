@@ -314,7 +314,10 @@ if (backTop) {
 
 // Scrollspy: highlight the nav link whose section is currently in view.
 // A link is active only when its section crosses the viewport middle; when
-// nothing matches (e.g. at the very top), no link is highlighted.
+// nothing matches (e.g. at the very top), no link is highlighted. The
+// address bar follows the same signal: the URL hash is kept in sync with
+// the section being read (evolution #40), so copying the URL mid-scroll
+// shares the section in view instead of the bare homepage.
 const navLinks = [...document.querySelectorAll('header nav a[href^="#"]')];
 const sectionLinks = navLinks
   .map(link => ({ link, section: document.querySelector(link.getAttribute('href')) }))
@@ -328,13 +331,42 @@ if ('IntersectionObserver' in window && sectionLinks.length > 0) {
       else { link.removeAttribute('aria-current'); }
     });
   }
+  // Keep the URL hash in step with the section being read, reusing the
+  // scrollspy's own signal — no extra listeners. replaceState (not
+  // pushState) so scrolling never fills the back-button stack, and it
+  // never moves the page. Two guardrails: a project deep link
+  // (#project-...) is never clobbered while the reader is still inside
+  // the section that contains it, and at the very top a section hash is
+  // dropped back to the bare URL. No-JS visitors see no change.
+  const sectionIds = sectionLinks.map(({ section }) => section.id);
+  function syncHash(current) {
+    if (!('replaceState' in history)) return;
+    const currentHash = location.hash;
+    if (current === null) {
+      if (sectionIds.includes(currentHash.slice(1))) {
+        history.replaceState(null, '', location.pathname + location.search);
+      }
+      return;
+    }
+    if (currentHash === '#' + current.section.id) return;
+    let hashTarget = null;
+    try { hashTarget = currentHash ? document.querySelector(currentHash) : null; }
+    catch (e) { hashTarget = null; }
+    if (hashTarget && current.section.contains(hashTarget)) return;
+    history.replaceState(null, '', location.pathname + location.search + '#' + current.section.id);
+  }
+  const visibleSections = new Set();
   const spy = new IntersectionObserver(entries => {
     entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const match = sectionLinks.find(({ section }) => section === entry.target);
-        if (match) setActive(match.link);
-      }
+      const match = sectionLinks.find(({ section }) => section === entry.target);
+      if (!match) return;
+      if (entry.isIntersecting) visibleSections.add(match);
+      else visibleSections.delete(match);
     });
+    const current = sectionLinks.find(({ section }) =>
+      [...visibleSections].some(visible => visible.section === section));
+    setActive(current ? current.link : null);
+    syncHash(current || null);
   }, { rootMargin: '-45% 0px -50% 0px' });
   sectionLinks.forEach(({ section }) => spy.observe(section));
 }
