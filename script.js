@@ -146,12 +146,28 @@ function paintToggle() {
   themeToggle.setAttribute('aria-label', dark ? 'Switch to light mode' : 'Switch to dark mode');
   themeToggle.setAttribute('aria-pressed', String(dark));
 }
+// Keep the mobile browser chrome in step with the resolved theme
+// (evolution #41): the static meta tag is brand blue, which is right for
+// the light theme but leaves a bright address bar above a dark page.
+// Dark uses the dark --bg (#0e1016) so the chrome blends into the page;
+// light keeps the brand blue. A media-based pair of tags would follow
+// the OS, not the in-page toggle, so the value is written from the
+// resolved theme instead: on load, on every toggle, and on every
+// OS-driven change. No animation, no effect on print or no-JS visitors
+// (they keep the static brand blue).
+const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+function syncThemeColor() {
+  if (themeColorMeta) {
+    themeColorMeta.content = isDark() ? '#0e1016' : '#234ce8';
+  }
+}
 themeToggle.addEventListener('click', () => {
   const nextDark = !isDark();
   const applyTheme = () => {
     if (nextDark) { rootEl.dataset.theme = 'dark'; } else { delete rootEl.dataset.theme; }
     try { localStorage.setItem('leo-theme', nextDark ? 'dark' : 'light'); } catch (e) {}
     paintToggle();
+    syncThemeColor();
   };
   // Circular wipe from the toggle button (evolution #33, View Transitions
   // API): the new theme spreads out from the button instead of swapping
@@ -176,6 +192,7 @@ themeToggle.addEventListener('click', () => {
   transition.finished.finally(() => rootEl.classList.remove('theme-animating'));
 });
 paintToggle();
+syncThemeColor();
 
 // Follow the OS theme live, but only while the visitor has never picked
 // a theme manually: the toggle above stores 'leo-theme', and a stored
@@ -192,6 +209,7 @@ paintToggle();
     if (event.matches) { rootEl.dataset.theme = 'dark'; }
     else { delete rootEl.dataset.theme; }
     paintToggle();
+    syncThemeColor();
   }
   if (darkQuery.addEventListener) {
     darkQuery.addEventListener('change', onSystemThemeChange);
