@@ -534,3 +534,34 @@ details[open] summary::after{transform:translateY(2px) rotate(225deg)}
 .contact button:focus-visible{outline-color:#fff}
 @media(max-width:580px){.contact-actions{margin-top:12px}}
 @media print{.print-btn{display:none!important}}
+
+/* ---- Hero exit fade (evolution #42: the hero gently fades and drifts
+   up as it scrolls out of view, like GitHub's landing hero — pure CSS
+   scroll-driven animation, zero JS. The fade is tied to the hero's own
+   exit from the viewport (view timeline, exit range), so it only starts
+   once the hero actually begins leaving the top of the screen and is
+   done exactly when the hero is gone — no blank band, no premature
+   disappearance. Browsers without scroll-driven animations ignore the
+   @supports block and keep the static hero; reduced-motion users get
+   no animation (the media gate); print disables it. Pattern follows
+   Builder.io's "Animate hero elements with scroll-driven CSS
+   animations" ("the hero text fades away while moving behind the code
+   editor once you scroll down… achieve a similar effect with modern
+   CSS and zero JavaScript",
+   https://www.builder.io/blog/scroll-driven-animations). */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero {
+      animation: hero-exit linear both;
+      animation-timeline: view();
+      animation-range: exit 0% exit 100%;
+    }
+  }
+}
+@keyframes hero-exit {
+  from { opacity: 1; translate: 0 0; }
+  to { opacity: 0; translate: 0 -24px; }
+}
+@media print {
+  .hero { animation: none; }
+}
