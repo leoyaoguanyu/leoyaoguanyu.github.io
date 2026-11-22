@@ -565,3 +565,24 @@ details[open] summary::after{transform:translateY(2px) rotate(225deg)}
 @media print {
   .hero { animation: none; }
 }
+
+/* ---- Balanced text wrapping (evolution #43: typography) ----
+   Headings wrap with `text-wrap: balance`, so a multi-line title comes
+   out with near-equal lines instead of stranding one word alone on the
+   last line (e.g. "E-commerce sales & customer analytics" in a narrow
+   project card, the big "Let's build something useful." contact heading
+   on mobile); body paragraphs get `text-wrap: pretty`, which tunes the
+   last few lines to avoid orphan words. Pure CSS, no JS, no markup
+   change, no animation — reduced-motion users see the same result and
+   print benefits too. Unsupported browsers ignore both declarations and
+   wrap exactly as before, so this is progressive enhancement. Pattern
+   follows Chrome for Developers' "Improve Text Layout and Legibility"
+   ("For short text blocks like headings, use text-wrap: balance…
+   text-wrap: pretty … is specifically designed to prevent 'orphans'",
+   https://developer.chrome.com/docs/modern-web-guidance/guides/visual-design/improve-text-layout-and-legibility). */
+h1, h2, h3, h4 {
+  text-wrap: balance;
+}
+p {
+  text-wrap: pretty;
+}
