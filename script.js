@@ -768,3 +768,41 @@ if (emailCta && contactBottom) {
   contactActions.appendChild(emailCta);
   contactActions.appendChild(printBtn);
 }
+
+// Deep link opens the project (evolution #44): each project card already
+// has its own shareable link (#38, …/#project-rag-qa), but opening one
+// landed on a folded card — the recruiter still had to click "Inside the
+// project" to read the write-up. Now a load (or hash change) whose hash
+// names a project card opens that card's <details> right away, so the
+// shared link lands on the content, not on a closed fold. If a category
+// or tag filter is hiding the card, the filters are cleared first so the
+// link always works. Section hashes (#work / #about / #contact) and
+// unknown hashes are ignored; the native anchor jump still does the
+// scrolling, and no-JS visitors keep the plain jump to a folded card.
+// The script runs before first paint, so the details open before the
+// browser's anchor jump — no layout shift after landing.
+function openProjectFromHash() {
+  const target = location.hash
+    ? document.getElementById(location.hash.slice(1))
+    : null;
+  if (!target || !target.classList.contains('project')) return;
+  if (target.hidden) {
+    clearTagFilter();
+    filters.forEach(item => {
+      const selected = item.dataset.filter === 'all';
+      item.classList.toggle('active', selected);
+      item.setAttribute('aria-pressed', String(selected));
+    });
+    setFilterTabStops(filterList.find(item => item.dataset.filter === 'all'));
+    projects.forEach(project => { project.hidden = false; });
+    if (tagResultLine) {
+      tagResultLine.textContent =
+        'Showing ' + projects.length + ' of ' + projects.length + ' projects';
+    }
+  }
+  const detail = target.querySelector('details');
+  if (detail && !detail.open) detail.open = true;
+  paintToggleAll();
+}
+openProjectFromHash();
+window.addEventListener('hashchange', openProjectFromHash);
